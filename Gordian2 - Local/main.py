@@ -4,12 +4,13 @@ Main Gordian file; runs at localhost:9000
 """
 from graph_creator import create_graph, get_crossings, get_edges
 from fundamental_set_cycles import find_fund_set
-from all_cycles import find_all_cycles, dictify_cycles
+from all_cycles import find_all_cycles
+from helpers import dictify_cycles
 from links import find_links
 from knots import find_knots
 
 
-from links import listify
+from links import listify_cycles
 from links import find_links
 from functools import cached_property
 from urllib.parse import parse_qsl, urlparse
@@ -31,7 +32,7 @@ def Gordian(graph_filepath):
         all_cycles = find_all_cycles(dictify_cycles(fundamental_set_cycles))
         links = find_links(all_cycles, crossings)
         # FOR WHEN KNOT FUNCTION IS MADE:
-        find_knots(all_cycles, crossings)
+        knots = find_knots(all_cycles, crossings)
         return links
         # return {links: knots}    , then integrate as key/values into html
 
@@ -74,15 +75,12 @@ class handler(BaseHTTPRequestHandler):
         for link in links:
             self.wfile.write(bytes("<p>%s</p>" %str(link), "utf-8"))
 
+        # for knot in knots:
+        #     self.wfile.write(bytes("<p>%s</p>" %str(knot), "utf-8"))
+
         self.wfile.write(bytes('There are: ' + str(len(links)) + ' links', "utf-8"))
+        # self.wfile.write(bytes('There are: ' + str(len(knots)) + ' links', "utf-8"))
 
-    def do_POST(self):
-        self.send_response(200)
-        self.send_header('Content-type','text/html')
-        self.end_headers()
-
-        message = "Hello, World! Here is a POST response"
-        self.wfile.write(bytes(message, "utf8"))
 
 
 """

@@ -1,9 +1,5 @@
 import numpy as np
 import math as math
 
-def f(a,b):
-    return a,b
-
-
-t,r = f("a", "b")
-print(t,r)
+for i in range(0,9):
+    print(i)

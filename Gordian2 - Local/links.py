@@ -1,15 +1,4 @@
-"""
-Turns dictionary formatted cycle into oriented list formatted cycle
-"""
-def listify(loc, cycle, graveyard):
-    graveyard.append(loc)
-    for next in cycle[loc]:
-        if next in graveyard:
-            continue
-        elif next not in graveyard:
-            return listify(next, cycle, graveyard)
-    return graveyard + [graveyard[0]]
-
+from helpers import listify_cycles
 
 """
 Finds all the pairs of cycles that are linked
@@ -17,7 +6,7 @@ Finds all the pairs of cycles that are linked
 def find_links(all_cycles, crossings):
     cycles = []
     for cycle in all_cycles:
-        cycles.append(listify(list(cycle.keys())[0], cycle, []))
+        cycles.append(listify_cycles(list(cycle.keys())[0], cycle, []))
     linked_cycles = []
     #Compare all cycles with all other cycles (dont need to repeat pairs)
     for cycleA in cycles:
@@ -32,7 +21,7 @@ def find_links(all_cycles, crossings):
             link_num = link_num/2
             if link_num != 0:
                 linked_cycles.append((cycleA, cycleB, link_num))
-            elif link_num == 0 and link_num >= 4: #potential crossings
+            elif link_num >= 4: #potential crossings
                 linked_cycles.append((cycleA, cycleB, link_num, "POTENTIAL"))
 
     return linked_cycles
