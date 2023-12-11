@@ -1,8 +1,8 @@
 """
-Main Gordian file; runs at localhost:9000
+Main Gordian file; runs at localhost:8080
 
 """
-from graph_creator import create_graph, get_crossings, get_edges
+from graph_creator import create_graph, get_crossings_for_links, get_edges
 from fundamental_set_cycles import find_fund_set
 from all_cycles import find_all_cycles
 from helpers import dictify_cycles
@@ -27,12 +27,12 @@ def Gordian(graph_filepath):
         print("================ Graph_filepath ================ ", graph_filepath)
         graph  = create_graph("./Graph data files/" + graph_filepath)
         graph_edges = get_edges("./Graph data files/" + graph_filepath)
-        crossings = get_crossings("./Graph data files/" + graph_filepath, graph)
+        crossing_data_for_links = get_crossings_for_links("./Graph data files/" + graph_filepath, graph)
         fundamental_set_cycles = find_fund_set(graph, graph_edges)
         all_cycles = find_all_cycles(dictify_cycles(fundamental_set_cycles))
-        links = find_links(all_cycles, crossings)
+        links = find_links(all_cycles, crossing_data_for_links)
         # FOR WHEN KNOT FUNCTION IS MADE:
-        knots = find_knots(all_cycles, crossings)
+        # knots = find_knots(all_cycles, crossings)
         return links
         # return {links: knots}    , then integrate as key/values into html
 

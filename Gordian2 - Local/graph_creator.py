@@ -40,17 +40,18 @@ def get_edges(filepath):
         edges.append(word)
     return edges
 """
-get_crossings: returns set of edges from a graph
+get_crossings: returns crossing data for use in link finding algorithm
 - Parameters: .txt file path containing graph crossings (and edges)
 """
-def get_crossings(filepath, graph):
+def get_crossings_for_links(filepath, graph):
     x = max([int(num) for num in list(graph.keys())]) + 1
     crossings = np.zeros((x,x,x,x)) #4 dimensional array with dimensions equal to highest signertex
     graph_data = open(str(filepath), 'r')
     for line in graph_data.readlines():
         line = line.replace(',', ' ').split()
         if len(line) == 7:
-            a,b,c,d,sign = int(line[0]), int(line[1]), int(line[2]), int(line[3]), int(line[6])
+            a, b, c, d, order_a, order_b, sign = int(line[0]), int(line[1]), int(line[2]), int(line[3]), int(line[4]), int(line[5]), int(line[6])
+            
             crossings[a][b][c][d] = sign
             crossings[a][b][d][c] = (-sign)
             crossings[b][a][c][d] = (-sign)
@@ -59,4 +60,6 @@ def get_crossings(filepath, graph):
             crossings[d][c][a][b] = (-sign)
             crossings[c][d][b][a] = (-sign)
             crossings[d][c][b][a] = sign
+
     return crossings
+
