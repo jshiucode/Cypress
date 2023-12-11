@@ -3,6 +3,7 @@ Python script which takes text file as input and outputs a graph
 Input must be a .txt file with edges listed, then crossings
 """
 import numpy as np
+
 """
 create_graph: takes .txt file and outputs the graph
 - Parameters: .txt file path
@@ -39,8 +40,9 @@ def get_edges(filepath):
             continue
         edges.append(word)
     return edges
+
 """
-get_crossings: returns crossing data for use in link finding algorithm
+get_crossings_for_links: returns crossing data for use in link finding algorithm
 - Parameters: .txt file path containing graph crossings (and edges)
 """
 def get_crossings_for_links(filepath, graph):
@@ -63,3 +65,38 @@ def get_crossings_for_links(filepath, graph):
 
     return crossings
 
+"""
+get_crossings_for_knots: returns dictionary of crossings. each crossing is an object of the crossing class. 
+- Parameters: .txt file path containing graph crossings 
+"""
+class Crossing:
+    def __init__(self, a, b, c, d, seen, order_over, order_under):
+        self.over = [a, b]
+        self.under = [c, d]
+        self.seen = seen
+        self.order_over = order_over
+        self.order_under = order_under
+
+    def __str__(self):
+        return f"CROSSING => Over: {self.over}, Under: {self.under} Seen: {self.seen}, Over order: {self.order_over}, Under order: {self.order_under} "
+
+    def switch_over_under(self):
+        placeholder = []
+        placeholder = self.over
+        self.over = self.under
+        self.under = placeholder
+        return self
+
+
+def get_crossings_for_knots(filepath):
+    crossing_list = []
+    indx = 0
+    graph_data = open(str(filepath), 'r')
+    for line in graph_data.readlines():
+        line = line.replace(',', ' ').split()
+        if len(line) == 7:
+            a, b, c, d, order_a, order_b = int(line[0]), int(line[1]), int(line[2]), int(line[3]), int(line[4]), int(line[5])
+            crossing = Crossing(a, b, c, d, False, order_a, order_b)
+            crossing_list.append(crossing)
+            indx += 1
+    return crossing_list

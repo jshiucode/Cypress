@@ -2,7 +2,7 @@
 Function that uses cycles and crossing data to find knots
 """
 
-from graph_creator import create_graph, get_crossings_for_links, get_edges
+from graph_creator import create_graph, get_crossings_for_links, get_edges, get_crossings_for_knots
 from fundamental_set_cycles import find_fund_set
 from all_cycles import find_all_cycles
 from helpers import dictify_cycles, listify_cycles
@@ -11,19 +11,20 @@ from links import find_links
 """
 FOR TESTING KNOTS.PY ONLY:
 """
-# def Gordian(graph_filepath):
-#     if graph_filepath != 'favicon.ico':
-#         print("================ Graph_filepath ================ ", graph_filepath)
-#         graph  = create_graph("./Graph data files/" + graph_filepath)
-#         graph_edges = get_edges("./Graph data files/" + graph_filepath)
-#         crossings = get_crossings("./Graph data files/" + graph_filepath, graph)
-#         fundamental_set_cycles = find_fund_set(graph, graph_edges)
-#         all_cycles = find_all_cycles(dictify_cycles(fundamental_set_cycles))
-#         links = find_links(all_cycles, crossings)
-#         # FOR WHEN KNOT FUNCTION IS MADE:
-#         print(find_knots(all_cycles, crossings))
-#         return 0
-#         # return {links: knots}    , then integrate as key/values into html
+def Gordian(graph_filepath):
+    if graph_filepath != 'favicon.ico':
+        print("================ Graph_filepath ================ ", graph_filepath)
+        graph  = create_graph("./Graph data files/" + graph_filepath)
+        graph_edges = get_edges("./Graph data files/" + graph_filepath)
+        crossing_data_for_links = get_crossings_for_links("./Graph data files/" + graph_filepath, graph)
+        crossing_data_for_knots = get_crossings_for_knots("./Graph data files/" + graph_filepath)
+        fundamental_set_cycles = find_fund_set(graph, graph_edges)
+        all_cycles = find_all_cycles(dictify_cycles(fundamental_set_cycles))
+        links = find_links(all_cycles, crossing_data_for_links)
+        # FOR WHEN KNOT FUNCTION IS MADE:
+        knots = find_knots(all_cycles, crossing_data_for_knots)
+        return links
+        # return {links: knots}    , then integrate as key/values into html
 
 """
 Function that listifies cycles and traverses all cycles 
@@ -47,9 +48,8 @@ Knotting algorithm for each cycle
 def cycle_is_knotted(cycle, crossings) -> bool:
     print("CYCLE: ", cycle)
 
-    #initialize copy of crossing_data and crossing_seen data
-    crossing_lk_num = crossings.copy()
-    crossing_seen = set()
+    #initialize copy of crossing_data
+    crossings = crossings.copy()
 
     #initialize a_2 at start
     a_2 = 0
@@ -62,24 +62,21 @@ def cycle_is_knotted(cycle, crossings) -> bool:
 
     #traverse cycle by edges
     for edge in cycle_edges:
-        if is_unseen_undercrossing(edge, crossing_lk_num, cycle_edges)[1]:
-            
-            #add crossing to crossing_seen
+        # print(edge)
+        for crossing in crossings:
+            if (crossing.under == [edge[0], edge[1]] or crossing.under == [edge[1], edge[0]]) and crossing.seen != True:
+                # if reach a crossing haven't seen yet: switch to over crossing, add to seen data
+                # print(crossing)
+                crossing.switch_over_under()
+                crossing.seen = True
+                # print(crossing)
 
-            #smooth
-            print("PLACEHOLDER")
+                #TO DO:
 
-        
+                #SMOOTH
 
+                #CALCULATE LINKING NUMBER
 
-    # return True if a_2 != 0 else False
+    return True if a_2 != 0 else False
 
-def is_unseen_undercrossing(edge, crossing_data, cycle_edges):
-    crossing_seen = [[], False]
-    cycle_edges.remove(edge)
-    for other_edge in cycle_edges:
-        print("PLACEHOLDER")
-
-    return crossing_seen
-
-# Gordian("/unknot.txt")
+Gordian("/unknot.txt")
