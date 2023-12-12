@@ -23,7 +23,7 @@ def Gordian(graph_filepath):
         links = find_links(all_cycles, crossing_data_for_links)
         # FOR WHEN KNOT FUNCTION IS MADE:
         knots = find_knots(all_cycles, crossing_data_for_knots, crossing_data_for_links)
-        return links
+        return links, knots
         # return {links: knots}    , then integrate as key/values into html
 
 """
@@ -46,7 +46,7 @@ def find_knots(all_cycles, crossing_data_knots, crossing_data_for_links) -> list
 Knotting algorithm for each cycle
 """
 def cycle_is_knotted(cycle, crossing_data_for_knots, crossing_data_for_links) -> bool:
-    print("CYCLE: ", cycle)
+    # print("CYCLE: ", cycle)
 
     #initialize copy of crossing_data
     crossing_data_for_knots = crossing_data_for_knots.copy()
@@ -62,7 +62,7 @@ def cycle_is_knotted(cycle, crossing_data_for_knots, crossing_data_for_links) ->
 
     #traverse cycle by edges
     for edge in cycle_edges:
-        print(edge)
+        # print(edge)
         for crossing in crossing_data_for_knots:
             if (crossing.under == [edge[0], edge[1]] or crossing.under == [edge[1], edge[0]]) and crossing.seen != True:
                 # if reach a crossing haven't seen yet: switch to over crossing, add to seen data
@@ -74,10 +74,8 @@ def cycle_is_knotted(cycle, crossing_data_for_knots, crossing_data_for_links) ->
                 # smooth the crossing, creating two disjoint cycles
                 two_disjoint_cycles = smooth_crossing(crossing, cycle_edges)
 
-                print(two_disjoint_cycles)
-
                 # calculate the linking number of the two disjoint cycles
-                a_2 += linking_number(two_disjoint_cycles, crossing_data_for_links)
+                a_2 -= linking_number(two_disjoint_cycles, crossing_data_for_links)
 
     return True if a_2 != 0 else False
 
@@ -86,11 +84,11 @@ Smooths the crossing
 - returns two disjoint cycles
 """
 def smooth_crossing(crossing, cycle_edges):
-    print("SMOOTHING")
-    print(crossing.over, crossing.under)
+    # print("SMOOTHING")
+
     # convert crossing class into correct orientation of the cycle
     for edge in cycle_edges:
-        print(edge)
+        # print(edge)
         edge.reverse()
         if crossing.over == edge:
             crossing.over = edge
@@ -100,9 +98,10 @@ def smooth_crossing(crossing, cycle_edges):
         edge.reverse()
     
     # remove edges from crossing
-    print(crossing.over, crossing.under)
-    cycle_edges.remove(crossing.over)
-    cycle_edges.remove(crossing.under)
+    if crossing.over in cycle_edges:
+        cycle_edges.remove(crossing.over)
+    if crossing.under in cycle_edges:
+        cycle_edges.remove(crossing.under)
 
     # 1st over -> 2nd under and 1st under -> 2nd over
     cycle_edges.append([crossing.over[0], crossing.under[1]])
@@ -112,25 +111,19 @@ def smooth_crossing(crossing, cycle_edges):
 
     return cycle_edges
 
+"""
+Find the linking number of the two disjoint cycles
+"""
 def linking_number(two_disjoint_cycles, crossing_data_for_links):
     # initialize variables
     link_num = 0
     cycleA = []
     cycleB = []
 
-    # seperate cycles helper function
-    def seperate_cycles(disjoint_cycles):
-        ## TO DO:
-        # WRITE A RECURSIVE FUNCTION THAT SPLITS THIS LIST OF LISTS OF EDGES ([5,6], [6,7], ...) INTO TWO DISJOINT CYCLES
-        # OF THE FORM [5,6,7,8,5] AND [1,2,3,4,1], FOR EXAMPLE
-        print("PLACEHOLDER")
-
     # seperate cycles
-    cycles = seperate_cycles(two_disjoint_cycles)
-    cycleA = cycles[0]
-    cycleB = cycles[1]
-
-
+    print("disjoint cycles: ", two_disjoint_cycles)
+    cycleA, cycleB = separate_cycles(two_disjoint_cycles)
+    print("seperated into: ", cycleA, cycleB)
 
     # compare edges
     for a in range(len(cycleA)-1):
@@ -138,7 +131,53 @@ def linking_number(two_disjoint_cycles, crossing_data_for_links):
             link_num += crossing_data_for_links[int(cycleA[a])][int(cycleA[a+1])][int(cycleB[b])][int(cycleB[b+1])]
     link_num = link_num/2
 
-    return 0
+    return link_num
+
+
+"""
+Helper DFS method to seperate list into two disjoint cycles
+"""
+def separate_cycles(edges):
+    def dfs(node, cycle_number, start_node):
+        visited[node] = True
+        cycles[cycle_number].append(node)
+        for neighbor in graph[node]:
+            if not visited[neighbor]:
+                dfs(neighbor, cycle_number, start_node)
+
+    # Create an undirected graph from the given edges
+    graph = {}
+    for edge in edges:
+        u, v = edge
+        if u not in graph:
+            graph[u] = []
+        if v not in graph:
+            graph[v] = []
+        graph[u].append(v)
+        graph[v].append(u)
+
+    # Initialize variables
+    visited = {node: False for node in graph}
+    cycles = {1: [], 2: []}
+    cycle_number = 1
+
+    # Traverse the graph using DFS
+    for node in graph:
+        if not visited[node]:
+            dfs(node, cycle_number, node)
+            cycle_number += 1
+
+    if len(cycles[1]) > 0:
+        cycles[1].append(cycles[1][0])
+    if len(cycles[2]) > 0:
+        cycles[2].append(cycles[2][0])
+    return cycles[1], cycles[2]
         
 
-Gordian("/unknot.txt")
+## TESTING PURPOSES ONLY:
+links, knots = Gordian("/h10.txt")
+print(f" There are {len(links)} links:")
+for link in links:
+    print(link)
+
+print("KNOTS: ", knots)
