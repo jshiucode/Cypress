@@ -22,14 +22,14 @@ def Gordian(graph_filepath):
         all_cycles = find_all_cycles(dictify_cycles(fundamental_set_cycles))
         links = find_links(all_cycles, crossing_data_for_links)
         # FOR WHEN KNOT FUNCTION IS MADE:
-        knots = find_knots(all_cycles, crossing_data_for_knots)
+        knots = find_knots(all_cycles, crossing_data_for_knots, crossing_data_for_links)
         return links
         # return {links: knots}    , then integrate as key/values into html
 
 """
 Function that listifies cycles and traverses all cycles 
 """
-def find_knots(all_cycles, crossings) -> list:
+def find_knots(all_cycles, crossing_data_knots, crossing_data_for_links) -> list:
     # listify cycles
     cycles = []
     for dict_cycle in all_cycles:
@@ -37,7 +37,7 @@ def find_knots(all_cycles, crossings) -> list:
     
     knotted_cycles = []
     for cycle in cycles:
-        if cycle_is_knotted(cycle, crossings):
+        if cycle_is_knotted(cycle, crossing_data_knots, crossing_data_for_links):
             knotted_cycles.append(cycle)
     
     return knotted_cycles
@@ -45,11 +45,11 @@ def find_knots(all_cycles, crossings) -> list:
 """
 Knotting algorithm for each cycle
 """
-def cycle_is_knotted(cycle, crossings) -> bool:
+def cycle_is_knotted(cycle, crossing_data_for_knots, crossing_data_for_links) -> bool:
     print("CYCLE: ", cycle)
 
     #initialize copy of crossing_data
-    crossings = crossings.copy()
+    crossing_data_for_knots = crossing_data_for_knots.copy()
 
     #initialize a_2 at start
     a_2 = 0
@@ -62,8 +62,8 @@ def cycle_is_knotted(cycle, crossings) -> bool:
 
     #traverse cycle by edges
     for edge in cycle_edges:
-        # print(edge)
-        for crossing in crossings:
+        print(edge)
+        for crossing in crossing_data_for_knots:
             if (crossing.under == [edge[0], edge[1]] or crossing.under == [edge[1], edge[0]]) and crossing.seen != True:
                 # if reach a crossing haven't seen yet: switch to over crossing, add to seen data
                 # print(crossing)
@@ -71,12 +71,74 @@ def cycle_is_knotted(cycle, crossings) -> bool:
                 crossing.seen = True
                 # print(crossing)
 
-                #TO DO:
+                # smooth the crossing, creating two disjoint cycles
+                two_disjoint_cycles = smooth_crossing(crossing, cycle_edges)
 
-                #SMOOTH
+                print(two_disjoint_cycles)
 
-                #CALCULATE LINKING NUMBER
+                # calculate the linking number of the two disjoint cycles
+                a_2 += linking_number(two_disjoint_cycles, crossing_data_for_links)
 
     return True if a_2 != 0 else False
+
+"""
+Smooths the crossing
+- returns two disjoint cycles
+"""
+def smooth_crossing(crossing, cycle_edges):
+    print("SMOOTHING")
+    print(crossing.over, crossing.under)
+    # convert crossing class into correct orientation of the cycle
+    for edge in cycle_edges:
+        print(edge)
+        edge.reverse()
+        if crossing.over == edge:
+            crossing.over = edge
+        
+        if crossing.under == edge:
+            crossing.under = edge
+        edge.reverse()
+    
+    # remove edges from crossing
+    print(crossing.over, crossing.under)
+    cycle_edges.remove(crossing.over)
+    cycle_edges.remove(crossing.under)
+
+    # 1st over -> 2nd under and 1st under -> 2nd over
+    cycle_edges.append([crossing.over[0], crossing.under[1]])
+    cycle_edges.append([crossing.under[0], crossing.over[1]])
+
+    # !!!!!!!!!!!!!!!!!! CREATING NEW CROSSINGS?????
+
+    return cycle_edges
+
+def linking_number(two_disjoint_cycles, crossing_data_for_links):
+    # initialize variables
+    link_num = 0
+    cycleA = []
+    cycleB = []
+
+    # seperate cycles helper function
+    def seperate_cycles(disjoint_cycles):
+        ## TO DO:
+        # WRITE A RECURSIVE FUNCTION THAT SPLITS THIS LIST OF LISTS OF EDGES ([5,6], [6,7], ...) INTO TWO DISJOINT CYCLES
+        # OF THE FORM [5,6,7,8,5] AND [1,2,3,4,1], FOR EXAMPLE
+        print("PLACEHOLDER")
+
+    # seperate cycles
+    cycles = seperate_cycles(two_disjoint_cycles)
+    cycleA = cycles[0]
+    cycleB = cycles[1]
+
+
+
+    # compare edges
+    for a in range(len(cycleA)-1):
+        for b in range(len(cycleB)-1):
+            link_num += crossing_data_for_links[int(cycleA[a])][int(cycleA[a+1])][int(cycleB[b])][int(cycleB[b+1])]
+    link_num = link_num/2
+
+    return 0
+        
 
 Gordian("/unknot.txt")
