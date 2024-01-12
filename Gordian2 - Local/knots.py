@@ -65,8 +65,10 @@ def cycle_is_knotted(cycle, crossing_data_for_knots, crossing_data_for_links) ->
         # print(edge)
         for crossing in crossing_data_for_knots:
             if (crossing.under == [edge[0], edge[1]] or crossing.under == [edge[1], edge[0]]) and crossing.seen != True:
+
+                # MAYBE FIXME: ORDER OF crossing.switch_over_under() MAYBE
+
                 # if reach a crossing haven't seen yet: switch to over crossing, add to seen data
-                # print(crossing)
                 crossing.switch_over_under()
                 crossing.seen = True
                 # print(crossing)
@@ -83,6 +85,15 @@ def cycle_is_knotted(cycle, crossing_data_for_knots, crossing_data_for_links) ->
 Smooths the crossing
 - returns two disjoint cycles
 """
+
+
+# TODO:
+# FIX SMOOTHING (smooth_crossing) -- NOT CREATING TWO DISJOINT CYCLES
+# LOOK AT two_disjoint_cycles line 131, something is not right
+
+# POSSIBLE QUESTION: Is smoothing always supposed to create two disjoint cycles? I think yes.
+
+# FIXME:
 def smooth_crossing(crossing, cycle_edges):
     # print("SMOOTHING")
 
@@ -103,11 +114,11 @@ def smooth_crossing(crossing, cycle_edges):
     if crossing.under in cycle_edges:
         cycle_edges.remove(crossing.under)
 
-    # 1st over -> 2nd under and 1st under -> 2nd over
+    # #FIXME: THIS MIGHT BE WRONG: 1st over -> 2nd under and 1st under -> 2nd over
     cycle_edges.append([crossing.over[0], crossing.under[1]])
     cycle_edges.append([crossing.under[0], crossing.over[1]])
 
-    # !!!!!!!!!!!!!!!!!! CREATING NEW CROSSINGS?????
+    # TODO: !!!!!!!!!!!!!!!!!! CREATING NEW CROSSINGS?????
 
     return cycle_edges
 
@@ -167,6 +178,7 @@ def separate_cycles(edges):
             dfs(node, cycle_number, node)
             cycle_number += 1
 
+    # Append starting node at end of list
     if len(cycles[1]) > 0:
         cycles[1].append(cycles[1][0])
     if len(cycles[2]) > 0:
@@ -174,8 +186,10 @@ def separate_cycles(edges):
     return cycles[1], cycles[2]
         
 
+
+
 ## TESTING PURPOSES ONLY:
-links, knots = Gordian("/h10.txt")
+links, knots = Gordian("/unknot.txt")
 print(f" There are {len(links)} links:")
 for link in links:
     print(link)
