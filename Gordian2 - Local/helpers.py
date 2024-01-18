@@ -88,4 +88,11 @@ def seperate_cycles(edges):
     if len(cycles) > 2:
         raise Exception("MORE THAN TWO CYCLES CREATED")
 
+    if len(cycles) < 2:
+        raise Exception("ONLY ONE CYCLE CREATED")
+
+    #append extra vertex to complete the cycle
+    cycles[0].append(cycles[0][0])
+    cycles[1].append(cycles[1][0])
+
     return cycles[0], cycles[1]

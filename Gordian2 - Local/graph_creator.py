@@ -70,12 +70,13 @@ get_crossings_for_knots: returns dictionary of crossings. each crossing is an ob
 - Parameters: .txt file path containing graph crossings 
 """
 class Crossing:
-    def __init__(self, a, b, c, d, seen, order_over, order_under):
+    def __init__(self, a, b, c, d, seen, order_over, order_under, sign):
         self.over = [a, b]
         self.under = [c, d]
         self.seen = seen
         self.order_over = order_over
         self.order_under = order_under
+        self.sign = sign
 
     def __str__(self):
         return f"CROSSING => Over: {self.over}, Under: {self.under} Seen: {self.seen}, Over order: {self.order_over}, Under order: {self.order_under} "
@@ -95,8 +96,8 @@ def get_crossings_for_knots(filepath):
     for line in graph_data.readlines():
         line = line.replace(',', ' ').split()
         if len(line) == 7:
-            a, b, c, d, order_a, order_b = int(line[0]), int(line[1]), int(line[2]), int(line[3]), int(line[4]), int(line[5])
-            crossing = Crossing(a, b, c, d, False, order_a, order_b)
+            a, b, c, d, order_a, order_b, sign = int(line[0]), int(line[1]), int(line[2]), int(line[3]), int(line[4]), int(line[5]), int(line[6])
+            crossing = Crossing(a, b, c, d, False, order_a, order_b, sign)
             crossing_list.append(crossing)
             indx += 1
     return crossing_list
