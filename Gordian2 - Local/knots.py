@@ -5,7 +5,7 @@ Function that uses cycles and crossing data to find knots
 from graph_creator import create_graph, get_crossings_for_links, get_edges, get_crossings_for_knots
 from fundamental_set_cycles import find_fund_set
 from all_cycles import find_all_cycles
-from helpers import dictify_cycles, listify_cycles
+from helpers import dictify_cycles, listify_cycles, seperate_cycles
 from links import find_links
 
 """
@@ -64,12 +64,13 @@ def cycle_is_knotted(cycle, crossing_data_for_knots, crossing_data_for_links) ->
     for edge in cycle_edges:
         # print(edge)
         for crossing in crossing_data_for_knots:
-            if (crossing.under == [edge[0], edge[1]] or crossing.under == [edge[1], edge[0]]) and crossing.seen != True:
+            if (crossing.under == [edge[0], edge[1]] and crossing.seen != True):
+                if (crossing.under == [[edge[1]], edge[0]]):
+                    crossing.switch_over_under()
 
                 # MAYBE FIXME: ORDER OF crossing.switch_over_under() MAYBE
 
                 # if reach a crossing haven't seen yet: switch to over crossing, add to seen data
-                crossing.switch_over_under()
                 crossing.seen = True
                 # print(crossing)
 
@@ -89,9 +90,9 @@ Smooths the crossing
 
 # TODO:
 # FIX SMOOTHING (smooth_crossing) -- NOT CREATING TWO DISJOINT CYCLES
-# LOOK AT two_disjoint_cycles line 131, something is not right
 
 # POSSIBLE QUESTION: Is smoothing always supposed to create two disjoint cycles? I think yes.
+# QUESTION: Is there a surefire way of smoothing so that it creates two disjoint cycles?
 
 # FIXME:
 def smooth_crossing(crossing, cycle_edges):
@@ -118,7 +119,7 @@ def smooth_crossing(crossing, cycle_edges):
     cycle_edges.append([crossing.over[0], crossing.under[1]])
     cycle_edges.append([crossing.under[0], crossing.over[1]])
 
-    # TODO: !!!!!!!!!!!!!!!!!! CREATING NEW CROSSINGS?????
+    # TODO: !!!!!!!!!!!!!!!!!! CREATING NEW CROSSINGS ?????
 
     return cycle_edges
 
@@ -133,7 +134,7 @@ def linking_number(two_disjoint_cycles, crossing_data_for_links):
 
     # seperate cycles
     print("disjoint cycles: ", two_disjoint_cycles)
-    cycleA, cycleB = separate_cycles(two_disjoint_cycles)
+    cycleA, cycleB = seperate_cycles(two_disjoint_cycles)
     print("seperated into: ", cycleA, cycleB)
 
     # compare edges
@@ -145,46 +146,6 @@ def linking_number(two_disjoint_cycles, crossing_data_for_links):
     return link_num
 
 
-"""
-Helper DFS method to seperate list into two disjoint cycles
-"""
-def separate_cycles(edges):
-    def dfs(node, cycle_number, start_node):
-        visited[node] = True
-        cycles[cycle_number].append(node)
-        for neighbor in graph[node]:
-            if not visited[neighbor]:
-                dfs(neighbor, cycle_number, start_node)
-
-    # Create an undirected graph from the given edges
-    graph = {}
-    for edge in edges:
-        u, v = edge
-        if u not in graph:
-            graph[u] = []
-        if v not in graph:
-            graph[v] = []
-        graph[u].append(v)
-        graph[v].append(u)
-
-    # Initialize variables
-    visited = {node: False for node in graph}
-    cycles = {1: [], 2: []}
-    cycle_number = 1
-
-    # Traverse the graph using DFS
-    for node in graph:
-        if not visited[node]:
-            dfs(node, cycle_number, node)
-            cycle_number += 1
-
-    # Append starting node at end of list
-    if len(cycles[1]) > 0:
-        cycles[1].append(cycles[1][0])
-    if len(cycles[2]) > 0:
-        cycles[2].append(cycles[2][0])
-    return cycles[1], cycles[2]
-        
 
 
 

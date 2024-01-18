@@ -50,3 +50,42 @@ def bin_strings(n):
     genbin(n, bin_strings, bs = [])
     bin_strings.remove([0] * n)
     return bin_strings
+
+"""
+Takes in list of edges (each edge in in list form) and outputs the two disjoint cycles in list form
+"""
+def seperate_cycles(edges):
+    # Create a dictionary to represent the graph
+    graph = {}
+    for edge in edges:
+        u, v = edge
+        if u not in graph:
+            graph[u] = []
+        if v not in graph:
+            graph[v] = []
+        graph[u].append(v)
+        graph[v].append(u)
+
+    # Perform a depth-first search to find cycles
+    def dfs(node, visited, cycle):
+        visited[node] = True
+        cycle.append(node)
+        for neighbor in graph[node]:
+            if not visited[neighbor]:
+                dfs(neighbor, visited, cycle)
+
+    # Initialize variables
+    visited = {node: False for node in graph}
+    cycles = []
+
+    # Iterate through all nodes
+    for node in graph:
+        if not visited[node]:
+            cycle = []
+            dfs(node, visited, cycle)
+            cycles.append(cycle)
+
+    if len(cycles) > 2:
+        raise Exception("MORE THAN TWO CYCLES CREATED")
+
+    return cycles[0], cycles[1]
