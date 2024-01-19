@@ -17,7 +17,6 @@ from urllib.parse import parse_qsl, urlparse
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import http.server
 from http.cookies import SimpleCookie
-import numpy as np
 import time
 
 """
