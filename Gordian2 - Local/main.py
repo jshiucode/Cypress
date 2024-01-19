@@ -2,7 +2,7 @@
 Main Gordian file; runs at localhost:8080
 
 """
-from graph_creator import create_graph, get_crossings_for_links, get_edges
+from graph_creator import create_graph, get_crossings_for_links, get_edges, get_crossings_for_knots
 from fundamental_set_cycles import find_fund_set
 from all_cycles import find_all_cycles
 from helpers import dictify_cycles
@@ -18,22 +18,30 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 import http.server
 from http.cookies import SimpleCookie
 import numpy as np
+import time
 
 """
 Full integration of all other files
 """
 def Gordian(graph_filepath):
     if graph_filepath != 'favicon.ico':
+        start_time = time.time()
         print("================ Graph_filepath ================ ", graph_filepath)
         graph  = create_graph("./Graph data files/" + graph_filepath)
         graph_edges = get_edges("./Graph data files/" + graph_filepath)
         crossing_data_for_links = get_crossings_for_links("./Graph data files/" + graph_filepath, graph)
+        crossing_data_for_knots = get_crossings_for_knots("./Graph data files/" + graph_filepath)
         fundamental_set_cycles = find_fund_set(graph, graph_edges)
         all_cycles = find_all_cycles(dictify_cycles(fundamental_set_cycles))
         links = find_links(all_cycles, crossing_data_for_links)
+
         # FOR WHEN KNOT FUNCTION IS MADE:
-        # knots = find_knots(all_cycles, crossings)
-        return links
+        # knots = find_knots(all_cycles, crossing_data_for_knots, crossing_data_for_links)
+
+        end_time = time.time()
+        elapsed_time = end_time - start_time
+
+        return links, elapsed_time
         # return {links: knots}    , then integrate as key/values into html
 
 """
@@ -71,7 +79,7 @@ class handler(BaseHTTPRequestHandler):
         self.wfile.write(bytes("<p>You accessed file: %s</p>" % self.path[1:], "utf-8"))
 
         graph_filepath = self.path[1:]
-        links = Gordian(graph_filepath)
+        links, elapsed_time = Gordian(graph_filepath)
         for link in links:
             self.wfile.write(bytes("<p>%s</p>" %str(link), "utf-8"))
 
@@ -79,6 +87,7 @@ class handler(BaseHTTPRequestHandler):
         #     self.wfile.write(bytes("<p>%s</p>" %str(knot), "utf-8"))
 
         self.wfile.write(bytes('There are: ' + str(len(links)) + ' links', "utf-8"))
+        self.wfile.write(bytes('<p>Time taken to run algorithm ' + str(elapsed_time) + '</p>', "utf-8"))        
         # self.wfile.write(bytes('There are: ' + str(len(knots)) + ' links', "utf-8"))
 
 

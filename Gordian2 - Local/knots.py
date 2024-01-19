@@ -133,6 +133,7 @@ def smooth_crossing(crossing, cycle_edges):
     cycle_edges.append([crossing.under[0], crossing.over[1]])
 
     # TODO: crossing_data_for_links may need to be edited here (depending on order of crossings and such)
+    # - pass in crossing_data_for_links as parameter and change it?
 
     return cycle_edges
 
