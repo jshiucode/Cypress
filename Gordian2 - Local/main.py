@@ -35,12 +35,12 @@ def Gordian(graph_filepath):
         links = find_links(all_cycles, crossing_data_for_links)
 
         # FOR WHEN KNOT FUNCTION IS MADE:
-        # knots = find_knots(all_cycles, crossing_data_for_knots, crossing_data_for_links)
+        knots = find_knots(all_cycles, crossing_data_for_knots, crossing_data_for_links)
 
         end_time = time.time()
         elapsed_time = end_time - start_time
 
-        return links, elapsed_time
+        return links, elapsed_time, knots
         # return {links: knots}    , then integrate as key/values into html
 
 """
@@ -78,14 +78,19 @@ class handler(BaseHTTPRequestHandler):
         self.wfile.write(bytes("<p>You accessed file: %s</p>" % self.path[1:], "utf-8"))
 
         graph_filepath = self.path[1:]
-        links, elapsed_time = Gordian(graph_filepath)
+        links, elapsed_time, knots = Gordian(graph_filepath)
+
+        self.wfile.write(bytes('LINKS:', "utf-8"))
         for link in links:
             self.wfile.write(bytes("<p>%s</p>" %str(link), "utf-8"))
-
-        # for knot in knots:
-        #     self.wfile.write(bytes("<p>%s</p>" %str(knot), "utf-8"))
-
         self.wfile.write(bytes('There are: ' + str(len(links)) + ' links', "utf-8"))
+
+        self.wfile.write(bytes('KNOTS:', "utf-8"))
+        for knot in knots:
+            self.wfile.write(bytes("<p>%s</p>" %str(knot), "utf-8"))
+        self.wfile.write(bytes('There are: ' + str(len(knots)) + ' knots', "utf-8"))
+
+
         self.wfile.write(bytes('<p>Time taken to run algorithm ' + str(elapsed_time) + '</p>', "utf-8"))        
         # self.wfile.write(bytes('There are: ' + str(len(knots)) + ' links', "utf-8"))
 

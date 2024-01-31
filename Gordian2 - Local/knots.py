@@ -72,8 +72,8 @@ def cycle_is_knotted(cycle, crossing_data_for_knots, crossing_data_for_links) ->
         #     break
 
         for crossing in crossing_data_for_knots:
-            if ((crossing.under == [edge[0], edge[1]] or crossing.under == [[edge[1]], edge[0]]) and crossing.seen != True):
-                if (crossing.under == [[edge[1]], edge[0]]):
+            if ((crossing.under == [edge[0], edge[1]] or crossing.under == [edge[1], edge[0]]) and crossing.seen != True):
+                if (crossing.under == [edge[1], edge[0]]):
                     crossing.under = crossing.under.reverse()
 
                 # if reach a crossing haven't seen yet: switch to over crossing, add to seen data
@@ -98,7 +98,7 @@ def cycle_is_knotted(cycle, crossing_data_for_knots, crossing_data_for_links) ->
                 cycle_edges.insert(start_cycle.index(crossing.under), crossing.under)
                 print("CYCLE EDGES AFTER SMOOTH", cycle_edges)
 
-                #switch sign of crossing in link data and switch it's over under
+                #switch sign of crossing in link data and switch its over under
                 crossing_data_for_links[crossing.over[0]][crossing.over[1]][crossing.under[0]][crossing.under[1]] = -crossing_data_for_links[crossing.over[0]][crossing.over[1]][crossing.under[0]][crossing.under[1]]
                 crossing.switch_over_under()
 
@@ -162,11 +162,8 @@ def linking_number(two_disjoint_cycles, crossing_data_for_links):
     return link_num
 
 
-
-
-
 ## TESTING PURPOSES ONLY:
-links, knots = Gordian("/trefoil.txt")
+links, knots = Gordian("/test.txt")
 print(f" There are {len(links)} links:")
 for link in links:
     print(link)
