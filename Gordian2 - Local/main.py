@@ -97,7 +97,7 @@ class handler(BaseHTTPRequestHandler):
 
 
 """
-Server executiion
+Server execution
 """
 host = 'localhost'
 port = 8080

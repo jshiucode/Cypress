@@ -24,7 +24,6 @@ def Gordian(graph_filepath):
         # FOR WHEN KNOT FUNCTION IS MADE:
         knots = find_knots(all_cycles, crossing_data_for_knots, crossing_data_for_links)
         return links, knots
-        # return {links: knots}    , then integrate as key/values into html
 
 """
 Function that listifies cycles and traverses all cycles, returns knotted cycles 
@@ -72,7 +71,10 @@ def cycle_is_knotted(cycle, crossing_data_for_knots, crossing_data_for_links) ->
         #     break
 
         for crossing in crossing_data_for_knots:
-            if ((crossing.under == [edge[0], edge[1]] or crossing.under == [edge[1], edge[0]]) and crossing.seen != True):
+            if ((crossing.under == [edge[0], edge[1]] or crossing.under == [edge[1], edge[0]]) and crossing.seen != True
+                and (crossing.over in cycle_edges or [crossing.over[1], crossing.over[0]] in cycle_edges)):
+
+                #changing orientation if needed
                 if (crossing.under == [edge[1], edge[0]]):
                     crossing.under.reverse()
 
