@@ -74,7 +74,7 @@ def cycle_is_knotted(cycle, crossing_data_for_knots, crossing_data_for_links) ->
         for crossing in crossing_data_for_knots:
             if ((crossing.under == [edge[0], edge[1]] or crossing.under == [edge[1], edge[0]]) and crossing.seen != True):
                 if (crossing.under == [edge[1], edge[0]]):
-                    crossing.under = crossing.under.reverse()
+                    crossing.under.reverse()
 
                 # if reach a crossing haven't seen yet: switch to over crossing, add to seen data
                 crossing.seen = True
@@ -94,13 +94,13 @@ def cycle_is_knotted(cycle, crossing_data_for_knots, crossing_data_for_links) ->
                 cycle_edges.remove([crossing.under[0], crossing.over[1]])
 
                 #crossing edges need to be added back into cycle with switched under/over
+                crossing.switch_over_under()
                 cycle_edges.insert(start_cycle.index(crossing.over), crossing.over)
                 cycle_edges.insert(start_cycle.index(crossing.under), crossing.under)
                 print("CYCLE EDGES AFTER SMOOTH", cycle_edges)
 
                 #switch sign of crossing in link data and switch its over under
                 crossing_data_for_links[crossing.over[0]][crossing.over[1]][crossing.under[0]][crossing.under[1]] = -crossing_data_for_links[crossing.over[0]][crossing.over[1]][crossing.under[0]][crossing.under[1]]
-                crossing.switch_over_under()
 
 
     return True if a_2 != 0 else False
@@ -163,7 +163,9 @@ def linking_number(two_disjoint_cycles, crossing_data_for_links):
 
 
 ## TESTING PURPOSES ONLY:
-links, knots = Gordian("/test.txt")
+graph = input()
+filepath = "/" + graph + ".txt"
+links, knots = Gordian(filepath)
 print(f" There are {len(links)} links:")
 for link in links:
     print(link)
