@@ -52,7 +52,7 @@ def get_crossings_for_links(filepath, graph):
     for line in graph_data.readlines():
         line = line.replace(',', ' ').split()
         if len(line) == 7:
-            a, b, c, d, order_a, order_b, sign = int(line[0]), int(line[1]), int(line[2]), int(line[3]), int(line[4]), int(line[5]), int(line[6])
+            a, b, c, d, sign = int(line[0]), int(line[1]), int(line[2]), int(line[3]), int(line[6])
             
             crossings[a][b][c][d] = sign
             crossings[a][b][d][c] = (-sign)
@@ -91,7 +91,6 @@ class Crossing:
 
 def get_crossings_for_knots(filepath):
     crossing_list = []
-    indx = 0
     graph_data = open(str(filepath), 'r')
     for line in graph_data.readlines():
         line = line.replace(',', ' ').split()
@@ -99,5 +98,4 @@ def get_crossings_for_knots(filepath):
             a, b, c, d, order_a, order_b, sign = int(line[0]), int(line[1]), int(line[2]), int(line[3]), int(line[4]), int(line[5]), int(line[6])
             crossing = Crossing(a, b, c, d, False, order_a, order_b, sign)
             crossing_list.append(crossing)
-            indx += 1
     return crossing_list

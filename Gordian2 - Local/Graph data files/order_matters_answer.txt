@@ -1,0 +1,21 @@
+Gordian's Input:
+size = 9;
+
+edges:
+0,1
+0,7
+1,2
+2,3
+3,4
+4,5
+5,6
+6,7
+
+crossings:
+1,2,5,6,1,1,1
+0,7,4,5,1,1,-1
+2,3,0,7,1,2,1
+
+Your graph has the following 0 knots:
+
+Your graph has the following 0 links:

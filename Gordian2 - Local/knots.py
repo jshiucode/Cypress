@@ -71,10 +71,12 @@ def cycle_is_knotted(cycle, crossing_data_for_knots, crossing_data_for_links) ->
         #     break
 
         for crossing in crossing_data_for_knots:
+
+            #if we see and undercrossing we havent seen yet, and the over crossing is in the cycle
             if ((crossing.under == [edge[0], edge[1]] or crossing.under == [edge[1], edge[0]]) and crossing.seen != True
                 and (crossing.over in cycle_edges or [crossing.over[1], crossing.over[0]] in cycle_edges)):
 
-                #changing orientation if needed
+                #changing orientation of undercrossing if needed
                 if (crossing.under == [edge[1], edge[0]]):
                     crossing.under.reverse()
 
@@ -101,7 +103,7 @@ def cycle_is_knotted(cycle, crossing_data_for_knots, crossing_data_for_links) ->
                 cycle_edges.insert(start_cycle.index(crossing.under), crossing.under)
                 print("CYCLE EDGES AFTER SMOOTH", cycle_edges)
 
-                #switch sign of crossing in link data and switch its over under
+                #switch sign of crossing in link data
                 crossing_data_for_links[crossing.over[0]][crossing.over[1]][crossing.under[0]][crossing.under[1]] = -crossing_data_for_links[crossing.over[0]][crossing.over[1]][crossing.under[0]][crossing.under[1]]
 
 
@@ -156,6 +158,8 @@ def linking_number(two_disjoint_cycles, crossing_data_for_links):
     # compare edges
     for a in range(len(cycleA)-1):
         for b in range(len(cycleB)-1):
+            #print statement is inspecting lk# between each edge
+            print("cycleA egde", [cycleA[a],cycleA[a+1]], "cycleB egde", [cycleB[b], cycleB[b+1]], "lk = ", crossing_data_for_links[int(cycleA[a])][int(cycleA[a+1])][int(cycleB[b])][int(cycleB[b+1])])
             link_num += crossing_data_for_links[int(cycleA[a])][int(cycleA[a+1])][int(cycleB[b])][int(cycleB[b+1])]
     link_num = link_num/2
 
