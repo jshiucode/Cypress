@@ -53,3 +53,15 @@
 
 # [[6, 7], [0, 1], [2, 3], [3, 4], [5, 2], [1, 6], [7, 5], [4, 0]]
 
+def funct():
+    i = 1
+    def increase(i):
+        i += 1
+        print(i)
+        return i
+    
+    i = increase(i)
+
+    return i
+
+print(funct())
