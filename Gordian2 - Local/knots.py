@@ -45,6 +45,7 @@ def find_knots(all_cycles, crossing_data_knots, crossing_data_for_links) -> list
 Knotting algorithm for each cycle
 """
 def cycle_is_knotted(cycle, crossing_data_for_knots, crossing_data_for_links) -> bool:
+
     # print("CYCLE: ", cycle)
 
     #initialize copy of crossing_data
@@ -84,10 +85,44 @@ def cycle_is_knotted(cycle, crossing_data_for_knots, crossing_data_for_links) ->
                 crossing.seen = True
                 # print(crossing)
 
-                # smooth the crossing, creating two disjoint cycles
-                two_disjoint_cycles = smooth_crossing(crossing, cycle_edges)
+                """
+                Smooths the crossing
+                - returns two disjoint cycles
+                - built into cycle_is_knotted() to access crossing_data_for_knots and crossing_data_for_links as local variables
+                """
+                def smooth_crossing(crossing, cycle_edges):
+                    # print("SMOOTHING")
+                    print("SMOOTHING:", crossing)
+                    # convert crossing class into correct orientation of the cycle
+                    for edge in cycle_edges:
+                        # print(edge)
+                        edge.reverse()
+                        if crossing.over == edge:
+                            crossing.over = edge
+                        
+                        if crossing.under == edge:
+                            crossing.under = edge
+                        edge.reverse()
+                    
+                    # remove crossing edges from cycle
+                    if crossing.over in cycle_edges:
+                        cycle_edges.remove(crossing.over)
+                    if crossing.under in cycle_edges:
+                        cycle_edges.remove(crossing.under)
 
-                #TODO: crossing_data_for_links could potentially need to be updated here (if changing crossings because of order)
+                    # add in smoothed edges
+                    cycle_edges.append([crossing.over[0], crossing.under[1]])
+                    cycle_edges.append([crossing.under[0], crossing.over[1]])
+
+                    for inspected_crossing in crossing_data_for_knots:
+                        if inspected_crossing == crossing:
+                            continue
+                        crossing_data_for_links = check_crossing_order(inspected_crossing, crossing, crossing_data_for_links, crossing_data_for_knots)
+
+                    return cycle_edges, crossing_data_for_links
+
+                # smooth the crossing, creating two disjoint cycles
+                two_disjoint_cycles, crossing_data_for_links = smooth_crossing(crossing, cycle_edges)
 
                 # calculate the linking number of the two disjoint cycles
                 crossing_data_for_links[crossing.over[0]][crossing.over[1]][crossing.under[0]][crossing.under[1]] = 0
@@ -110,36 +145,65 @@ def cycle_is_knotted(cycle, crossing_data_for_knots, crossing_data_for_links) ->
     return True if a_2 != 0 else False
 
 """
-Smooths the crossing
-- returns two disjoint cycles
+Update the crossing_data_for_links matrix depending on crossing order after smoothing
+- params: 
+- return: crossing_data_for_links
 """
-def smooth_crossing(crossing, cycle_edges):
-    # print("SMOOTHING")
-    print("SMOOTHING:", crossing)
-    # convert crossing class into correct orientation of the cycle
-    for edge in cycle_edges:
-        # print(edge)
-        edge.reverse()
-        if crossing.over == edge:
-            crossing.over = edge
-        
-        if crossing.under == edge:
-            crossing.under = edge
-        edge.reverse()
+def check_crossing_order(inspected_crossing, crossing, crossing_data_for_links, crossing_data_for_knots):
+    # !! for the following comments, go by diagram dranw on iPad 'Meeting 1.18 on fixing smoothing'
+
+    # if inspected_crossing and crossing do not share any edges, continue
+    if (inspected_crossing.over != crossing.over and
+        inspected_crossing.under != crossing.under and
+        inspected_crossing.over != crossing.under and
+        inspected_crossing.under != crossing.over):
+        return crossing_data_for_links
     
-    # remove crossing edges from cycle
-    if crossing.over in cycle_edges:
-        cycle_edges.remove(crossing.over)
-    if crossing.under in cycle_edges:
-        cycle_edges.remove(crossing.under)
+    # inspected_crossing and crossing share edges
 
-    cycle_edges.append([crossing.over[0], crossing.under[1]])
-    cycle_edges.append([crossing.under[0], crossing.over[1]])
+    # -a crossing (SHARED OVER):
+    if (inspected_crossing.over == crossing.under) and inspected_crossing.order_over < crossing.order_under:
+        #TODO: FIND PATTERN FOR IF CROSSING EXISTS AT OTHER EDGE SUCH THAT 
+        # if crossing goes through to other edge
+        for through_crossing in crossing_data_for_knots:
+                if through_crossing.over == crossing.over and through_crossing.order_over > crossing.order_over:
+                    # make both through_crossing and -a crossing 0 in crossing_data_for_links
+                if through_crossing.under == crossing.over and through_crossing.order_under > crossing.order_over:
+                    # make both through_crossing and -a crossing 0 in crossing_data_for_links
 
-    # TODO: crossing_data_for_links may need to be edited here (depending on order of crossings and such)
-    # - pass in crossing_data_for_links as parameter and change it?
+        # change crossing_data_for_links accordingly (not special through case)
 
-    return cycle_edges
+
+    # -a crossing (SHARED UNDER):
+    if (inspected_crossing.under == crossing.under) and inspected_crossing.order_under < crossing.order_under:
+
+        # change crossing_data_for_links accordingly (not special through case)
+
+    # -b crossing (SHARED OVER):
+    if (inspected_crossing.over == crossing.under) and inspected_crossing.order_over > crossing.order_under:
+
+
+    # -b crossing (SHARED UNDER):
+    if (inspected_crossing.under == crossing.under) and inspected_crossing.order_under > crossing.order_under:
+
+    # -c crossing (SHARED OVER):
+    if (inspected_crossing.over == crossing.over) and inspected_crossing.order_over < crossing.order_over:
+
+    # -c crossing (SHARED UNDER):
+    if (inspected_crossing.under == crossing.over) and inspected_crossing.order_over < crossing.order_over:
+
+    # -d crossing (SHARED OVER):
+    if (inspected_crossing.over == crossing.over) and inspected_crossing.order_over > crossing.order_over:
+
+    # -d crossing (SHARED UNDER):
+    if (inspected_crossing.under == crossing.over) and inspected_crossing.order_over > crossing.order_over:
+
+
+
+
+    return crossing_data_for_links
+
+
 
 """
 Find the linking number of the two disjoint cycles
