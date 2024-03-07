@@ -81,6 +81,10 @@ class Crossing:
     def __str__(self):
         return f"CROSSING => Over: {self.over}, Under: {self.under} Seen: {self.seen}, Over order: {self.order_over}, Under order: {self.order_under} "
 
+    #for comparing crossings to eachother
+    def representation(self):
+        return f"CROSSING => Over: {sorted(self.over)}, Under: {sorted(self.under)} Seen: {self.seen}, Over order: {self.order_over}, Under order: {self.order_under} "
+
     def switch_over_under(self):
         placeholder = []
         placeholder = self.over

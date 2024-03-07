@@ -90,7 +90,7 @@ def cycle_is_knotted(cycle, crossing_data_for_knots, crossing_data_for_links) ->
                 - returns two disjoint cycles
                 - built into cycle_is_knotted() to access crossing_data_for_knots and crossing_data_for_links as local variables
                 """
-                def smooth_crossing(crossing, cycle_edges):
+                def smooth_crossing(crossing, cycle_edges, crossing_data_for_links, crossing_data_for_knots):
                     # print("SMOOTHING")
                     print("SMOOTHING:", crossing)
                     # convert crossing class into correct orientation of the cycle
@@ -115,17 +115,18 @@ def cycle_is_knotted(cycle, crossing_data_for_knots, crossing_data_for_links) ->
                     cycle_edges.append([crossing.under[0], crossing.over[1]])
 
                     for inspected_crossing in crossing_data_for_knots:
-                        if inspected_crossing == crossing:
+                        if inspected_crossing.representation() == crossing.representation():
                             continue
                         crossing_data_for_links = check_crossing_order(inspected_crossing, crossing, crossing_data_for_links, crossing_data_for_knots)
 
                     return cycle_edges, crossing_data_for_links
 
                 # smooth the crossing, creating two disjoint cycles
-                two_disjoint_cycles, crossing_data_for_links = smooth_crossing(crossing, cycle_edges)
+                two_disjoint_cycles, crossing_data_for_links = smooth_crossing(crossing, cycle_edges, crossing_data_for_links, crossing_data_for_knots)
 
+                # remove the crossing that has been smoothed
+                crossing_data_for_links = edit_crossing_data_for_links(crossing_data_for_links, crossing.over[0], crossing.over[1], crossing.under[0], crossing.under[1], 0)
                 # calculate the linking number of the two disjoint cycles
-                crossing_data_for_links[crossing.over[0]][crossing.over[1]][crossing.under[0]][crossing.under[1]] = 0
                 a_2 -= linking_number(two_disjoint_cycles, crossing_data_for_links)
 
                 #remove smoothed edges
@@ -163,40 +164,167 @@ def check_crossing_order(inspected_crossing, crossing, crossing_data_for_links, 
 
     # -a crossing (SHARED OVER):
     if (inspected_crossing.over == crossing.under) and inspected_crossing.order_over < crossing.order_under:
-        #TODO: FIND PATTERN FOR IF CROSSING EXISTS AT OTHER EDGE SUCH THAT 
-        # if crossing goes through to other edge
+        # if crossing goes through to other edge, both inspected crossing and through crossing disappear
         for through_crossing in crossing_data_for_knots:
                 if through_crossing.over == crossing.over and through_crossing.order_over > crossing.order_over:
-                    # make both through_crossing and -a crossing 0 in crossing_data_for_links
+                    # make both through_crossing and inspected crossing 0 in crossing_data_for_links
+                    crossing_data_for_links = edit_crossing_data_for_links(crossing_data_for_links, through_crossing.over[0], through_crossing.over[1], through_crossing.under[0], through_crossing.under[1], 0)
+                    crossing_data_for_links = edit_crossing_data_for_links(crossing_data_for_links, inspected_crossing.over[0], inspected_crossing.over[1], inspected_crossing.under[0], inspected_crossing.under[1], 0)
+                    return crossing_data_for_links
+
                 if through_crossing.under == crossing.over and through_crossing.order_under > crossing.order_over:
-                    # make both through_crossing and -a crossing 0 in crossing_data_for_links
+                    # make both through_crossing and inspected crossing 0 in crossing_data_for_links
+                    crossing_data_for_links = edit_crossing_data_for_links(crossing_data_for_links, through_crossing.over[0], through_crossing.over[1], through_crossing.under[0], through_crossing.under[1], 0)
+                    crossing_data_for_links = edit_crossing_data_for_links(crossing_data_for_links, inspected_crossing.over[0], inspected_crossing.over[1], inspected_crossing.under[0], inspected_crossing.under[1], 0)
+                    return crossing_data_for_links
 
         # change crossing_data_for_links accordingly (not special through case)
-
+        # inspected crossing's over goes from (a,b) to (a,d)
+        crossing_data_for_links = edit_crossing_data_for_links(crossing_data_for_links, crossing.under[0], crossing.over[1], inspected_crossing.under[0], inspected_crossing.under[1], inspected_crossing.sign)
 
     # -a crossing (SHARED UNDER):
     if (inspected_crossing.under == crossing.under) and inspected_crossing.order_under < crossing.order_under:
+        # if crossing goes through to other edge, both inspected crossing and through crossing disappear
+        for through_crossing in crossing_data_for_knots:
+                if through_crossing.over == crossing.over and through_crossing.order_over > crossing.order_over:
+                    # make both through_crossing and inspected crossing 0 in crossing_data_for_links
+                    crossing_data_for_links = edit_crossing_data_for_links(crossing_data_for_links, through_crossing.over[0], through_crossing.over[1], through_crossing.under[0], through_crossing.under[1], 0)
+                    crossing_data_for_links = edit_crossing_data_for_links(crossing_data_for_links, inspected_crossing.over[0], inspected_crossing.over[1], inspected_crossing.under[0], inspected_crossing.under[1], 0)
+                    return crossing_data_for_links
 
+                if through_crossing.under == crossing.over and through_crossing.order_under > crossing.order_over:
+                    # make both through_crossing and inspected crossing 0 in crossing_data_for_links
+                    crossing_data_for_links = edit_crossing_data_for_links(crossing_data_for_links, through_crossing.over[0], through_crossing.over[1], through_crossing.under[0], through_crossing.under[1], 0)
+                    crossing_data_for_links = edit_crossing_data_for_links(crossing_data_for_links, inspected_crossing.over[0], inspected_crossing.over[1], inspected_crossing.under[0], inspected_crossing.under[1], 0)
+                    return crossing_data_for_links
+
+        # change crossing_data_for_links accordingly (not special through case)
+        # inspected crossing's under goes from (a,b) to (a,d)
+        crossing_data_for_links = edit_crossing_data_for_links(crossing_data_for_links, inspected_crossing.over[0], inspected_crossing.over[1], crossing.under[0], crossing.over[1], inspected_crossing.sign)
         # change crossing_data_for_links accordingly (not special through case)
 
     # -b crossing (SHARED OVER):
     if (inspected_crossing.over == crossing.under) and inspected_crossing.order_over > crossing.order_under:
+        # if crossing goes through to other edge, both inspected crossing and through crossing disappear
+        for through_crossing in crossing_data_for_knots:
+                if through_crossing.over == crossing.over and through_crossing.order_over < crossing.order_over:
+                    # make both through_crossing and inspected crossing 0 in crossing_data_for_links
+                    crossing_data_for_links = edit_crossing_data_for_links(crossing_data_for_links, through_crossing.over[0], through_crossing.over[1], through_crossing.under[0], through_crossing.under[1], 0)
+                    crossing_data_for_links = edit_crossing_data_for_links(crossing_data_for_links, inspected_crossing.over[0], inspected_crossing.over[1], inspected_crossing.under[0], inspected_crossing.under[1], 0)
+                    return crossing_data_for_links
 
+                if through_crossing.under == crossing.over and through_crossing.order_under < crossing.order_over:
+                    # make both through_crossing and inspected crossing 0 in crossing_data_for_links
+                    crossing_data_for_links = edit_crossing_data_for_links(crossing_data_for_links, through_crossing.over[0], through_crossing.over[1], through_crossing.under[0], through_crossing.under[1], 0)
+                    crossing_data_for_links = edit_crossing_data_for_links(crossing_data_for_links, inspected_crossing.over[0], inspected_crossing.over[1], inspected_crossing.under[0], inspected_crossing.under[1], 0)
+                    return crossing_data_for_links
+
+        # change crossing_data_for_links accordingly (not special through case)
+        # inspected crossing's over goes from (a,b) to (c,b)
+        crossing_data_for_links = edit_crossing_data_for_links(crossing_data_for_links, crossing.over[0], crossing.under[1], inspected_crossing.under[0], inspected_crossing.under[1], inspected_crossing.sign)
 
     # -b crossing (SHARED UNDER):
     if (inspected_crossing.under == crossing.under) and inspected_crossing.order_under > crossing.order_under:
+        # if crossing goes through to other edge, both inspected crossing and through crossing disappear
+        for through_crossing in crossing_data_for_knots:
+                if through_crossing.over == crossing.over and through_crossing.order_over < crossing.order_over:
+                    # make both through_crossing and inspected crossing 0 in crossing_data_for_links
+                    crossing_data_for_links = edit_crossing_data_for_links(crossing_data_for_links, through_crossing.over[0], through_crossing.over[1], through_crossing.under[0], through_crossing.under[1], 0)
+                    crossing_data_for_links = edit_crossing_data_for_links(crossing_data_for_links, inspected_crossing.over[0], inspected_crossing.over[1], inspected_crossing.under[0], inspected_crossing.under[1], 0)
+                    return crossing_data_for_links
+
+                if through_crossing.under == crossing.over and through_crossing.order_under < crossing.order_over:
+                    # make both through_crossing and inspected crossing 0 in crossing_data_for_links
+                    crossing_data_for_links = edit_crossing_data_for_links(crossing_data_for_links, through_crossing.over[0], through_crossing.over[1], through_crossing.under[0], through_crossing.under[1], 0)
+                    crossing_data_for_links = edit_crossing_data_for_links(crossing_data_for_links, inspected_crossing.over[0], inspected_crossing.over[1], inspected_crossing.under[0], inspected_crossing.under[1], 0)
+                    return crossing_data_for_links
+
+        # change crossing_data_for_links accordingly (not special through case)
+        # inspected crossing's under goes from (a,b) to (c,b)
+        crossing_data_for_links = edit_crossing_data_for_links(crossing_data_for_links, inspected_crossing.over[0], inspected_crossing.over[1], crossing.over[0], crossing.under[1], inspected_crossing.sign)
+
 
     # -c crossing (SHARED OVER):
     if (inspected_crossing.over == crossing.over) and inspected_crossing.order_over < crossing.order_over:
+        # if crossing goes through to other edge, both inspected crossing and through crossing disappear
+        for through_crossing in crossing_data_for_knots:
+                if through_crossing.over == crossing.under and through_crossing.order_over > crossing.order_under:
+                    # make both through_crossing and inspected crossing 0 in crossing_data_for_links
+                    crossing_data_for_links = edit_crossing_data_for_links(crossing_data_for_links, through_crossing.over[0], through_crossing.over[1], through_crossing.under[0], through_crossing.under[1], 0)
+                    crossing_data_for_links = edit_crossing_data_for_links(crossing_data_for_links, inspected_crossing.over[0], inspected_crossing.over[1], inspected_crossing.under[0], inspected_crossing.under[1], 0)
+                    return crossing_data_for_links
+
+                if through_crossing.under == crossing.under and through_crossing.order_under > crossing.order_under:
+                    # make both through_crossing and inspected crossing 0 in crossing_data_for_links
+                    crossing_data_for_links = edit_crossing_data_for_links(crossing_data_for_links, through_crossing.over[0], through_crossing.over[1], through_crossing.under[0], through_crossing.under[1], 0)
+                    crossing_data_for_links = edit_crossing_data_for_links(crossing_data_for_links, inspected_crossing.over[0], inspected_crossing.over[1], inspected_crossing.under[0], inspected_crossing.under[1], 0)
+                    return crossing_data_for_links
+
+        # change crossing_data_for_links accordingly (not special through case)
+        # inspected crossing's over goes from (c,d) to (c,b)
+        crossing_data_for_links = edit_crossing_data_for_links(crossing_data_for_links, crossing.over[0], crossing.under[1], inspected_crossing.under[0], inspected_crossing.under[1], inspected_crossing.sign)
 
     # -c crossing (SHARED UNDER):
     if (inspected_crossing.under == crossing.over) and inspected_crossing.order_over < crossing.order_over:
+        # if crossing goes through to other edge, both inspected crossing and through crossing disappear
+        for through_crossing in crossing_data_for_knots:
+                if through_crossing.over == crossing.under and through_crossing.order_over > crossing.order_under:
+                    # make both through_crossing and inspected crossing 0 in crossing_data_for_links
+                    crossing_data_for_links = edit_crossing_data_for_links(crossing_data_for_links, through_crossing.over[0], through_crossing.over[1], through_crossing.under[0], through_crossing.under[1], 0)
+                    crossing_data_for_links = edit_crossing_data_for_links(crossing_data_for_links, inspected_crossing.over[0], inspected_crossing.over[1], inspected_crossing.under[0], inspected_crossing.under[1], 0)
+                    return crossing_data_for_links
+
+                if through_crossing.under == crossing.under and through_crossing.order_under > crossing.order_under:
+                    # make both through_crossing and inspected crossing 0 in crossing_data_for_links
+                    crossing_data_for_links = edit_crossing_data_for_links(crossing_data_for_links, through_crossing.over[0], through_crossing.over[1], through_crossing.under[0], through_crossing.under[1], 0)
+                    crossing_data_for_links = edit_crossing_data_for_links(crossing_data_for_links, inspected_crossing.over[0], inspected_crossing.over[1], inspected_crossing.under[0], inspected_crossing.under[1], 0)
+                    return crossing_data_for_links
+
+        # change crossing_data_for_links accordingly (not special through case)
+        # inspected crossing's under goes from (c,d) to (c,b)
+        crossing_data_for_links = edit_crossing_data_for_links(crossing_data_for_links, inspected_crossing.over[0], inspected_crossing.over[1], crossing.over[0], crossing.under[1], inspected_crossing.sign)
+
 
     # -d crossing (SHARED OVER):
     if (inspected_crossing.over == crossing.over) and inspected_crossing.order_over > crossing.order_over:
+        # if crossing goes through to other edge, both inspected crossing and through crossing disappear
+        for through_crossing in crossing_data_for_knots:
+                if through_crossing.over == crossing.under and through_crossing.order_over < crossing.order_under:
+                    # make both through_crossing and inspected crossing 0 in crossing_data_for_links
+                    crossing_data_for_links = edit_crossing_data_for_links(crossing_data_for_links, through_crossing.over[0], through_crossing.over[1], through_crossing.under[0], through_crossing.under[1], 0)
+                    crossing_data_for_links = edit_crossing_data_for_links(crossing_data_for_links, inspected_crossing.over[0], inspected_crossing.over[1], inspected_crossing.under[0], inspected_crossing.under[1], 0)
+                    return crossing_data_for_links
+
+                if through_crossing.under == crossing.under and through_crossing.order_under < crossing.order_under:
+                    # make both through_crossing and inspected crossing 0 in crossing_data_for_links
+                    crossing_data_for_links = edit_crossing_data_for_links(crossing_data_for_links, through_crossing.over[0], through_crossing.over[1], through_crossing.under[0], through_crossing.under[1], 0)
+                    crossing_data_for_links = edit_crossing_data_for_links(crossing_data_for_links, inspected_crossing.over[0], inspected_crossing.over[1], inspected_crossing.under[0], inspected_crossing.under[1], 0)
+                    return crossing_data_for_links
+
+        # change crossing_data_for_links accordingly (not special through case)
+        # inspected crossing's over goes from (c,d) to (a,d)
+        crossing_data_for_links = edit_crossing_data_for_links(crossing_data_for_links, crossing.under[0], crossing.over[1], inspected_crossing.under[0], inspected_crossing.under[1], inspected_crossing.sign)
 
     # -d crossing (SHARED UNDER):
     if (inspected_crossing.under == crossing.over) and inspected_crossing.order_over > crossing.order_over:
+        # if crossing goes through to other edge, both inspected crossing and through crossing disappear
+        for through_crossing in crossing_data_for_knots:
+                if through_crossing.over == crossing.under and through_crossing.order_over < crossing.order_under:
+                    # make both through_crossing and inspected crossing 0 in crossing_data_for_links
+                    crossing_data_for_links = edit_crossing_data_for_links(crossing_data_for_links, through_crossing.over[0], through_crossing.over[1], through_crossing.under[0], through_crossing.under[1], 0)
+                    crossing_data_for_links = edit_crossing_data_for_links(crossing_data_for_links, inspected_crossing.over[0], inspected_crossing.over[1], inspected_crossing.under[0], inspected_crossing.under[1], 0)
+                    return crossing_data_for_links
+
+                if through_crossing.under == crossing.under and through_crossing.order_under < crossing.order_under:
+                    # make both through_crossing and inspected crossing 0 in crossing_data_for_links
+                    crossing_data_for_links = edit_crossing_data_for_links(crossing_data_for_links, through_crossing.over[0], through_crossing.over[1], through_crossing.under[0], through_crossing.under[1], 0)
+                    crossing_data_for_links = edit_crossing_data_for_links(crossing_data_for_links, inspected_crossing.over[0], inspected_crossing.over[1], inspected_crossing.under[0], inspected_crossing.under[1], 0)
+                    return crossing_data_for_links
+
+        # change crossing_data_for_links accordingly (not special through case)
+        # inspected crossing's under goes from (c,d) to (a,d)
+        crossing_data_for_links = edit_crossing_data_for_links(crossing_data_for_links, inspected_crossing.over[0], inspected_crossing.over[1], crossing.under[0], crossing.over[1], inspected_crossing.sign)
+
 
 
 
@@ -231,6 +359,20 @@ def linking_number(two_disjoint_cycles, crossing_data_for_links):
 
     return link_num
 
+"""
+For correctly editing the crossing_data_for_links matrix when calculating linking number
+"""
+def edit_crossing_data_for_links(crossings, a,b,c,d,value):
+    crossings[a][b][c][d] = value
+    crossings[a][b][d][c] = (-value)
+    crossings[b][a][c][d] = (-value)
+    crossings[b][a][d][c] = value
+    crossings[c][d][a][b] = value
+    crossings[d][c][a][b] = (-value)
+    crossings[c][d][b][a] = (-value)
+    crossings[d][c][b][a] = value
+
+    return crossings
 
 ## TESTING PURPOSES ONLY:
 graph = input()
