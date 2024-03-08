@@ -96,3 +96,28 @@ def seperate_cycles(edges):
     cycles[1].append(cycles[1][0])
 
     return cycles[0], cycles[1]
+
+
+"""
+Takes in a cycle of nodes in string form and returns the oriented cycle starting at the smallest node:
+ex: input = ['5', '6', '7', '1', '2', '3', '4', '5']
+    output = [1, 2, 3, 4, 5, 6, 7, 1]
+"""
+def orient_cycle_at_smallest(cycle):
+    cycle = [int(node) for node in cycle]
+    smallest = min(cycle)
+    hold_cycle = []
+    end_cycle = []
+    print(smallest)
+    for i, node in enumerate(cycle):
+        if i == 0 and node == smallest:
+            return cycle
+        if node == smallest:
+            end_cycle.extend(cycle[i:])
+            break
+        else:
+            hold_cycle.append(node)
+    
+    end_cycle.extend(hold_cycle[1:])
+    end_cycle.append(smallest)
+    return end_cycle
