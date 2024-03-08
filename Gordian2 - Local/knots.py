@@ -139,10 +139,10 @@ def check_crossing_order(inspected_crossing, crossing, crossing_data_for_links, 
     print("crossing:", crossing)
 
     # if inspected_crossing and crossing do not share any edges, continue
-    if (inspected_crossing.over_arbitrary != crossing.over_arbitrary and
-        inspected_crossing.under_arbitrary != crossing.under_arbitrary and
-        inspected_crossing.over_arbitrary != crossing.under_arbitrary and
-        inspected_crossing.under_arbitrary != crossing.over_arbitrary):
+    if (inspected_crossing.over != crossing.over and
+        inspected_crossing.under != crossing.under and
+        inspected_crossing.over != crossing.under and
+        inspected_crossing.under != crossing.over):
         print("NO SHARED EDGES")
         return crossing_data_for_links
     

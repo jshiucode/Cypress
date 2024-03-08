@@ -73,8 +73,6 @@ class Crossing:
     def __init__(self, a, b, c, d, seen, order_over, order_under, sign):
         self.over = [a, b]
         self.under = [c, d]
-        self.over_arbitrary = sorted([a,b])
-        self.under_arbitrary = sorted([c,d])
         self.seen = seen
         self.order_over = order_over
         self.order_under = order_under
