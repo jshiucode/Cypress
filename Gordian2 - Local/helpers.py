@@ -108,7 +108,6 @@ def orient_cycle_at_smallest(cycle):
     smallest = min(cycle)
     hold_cycle = []
     end_cycle = []
-    print(smallest)
     for i, node in enumerate(cycle):
         if i == 0 and node == smallest:
             return cycle

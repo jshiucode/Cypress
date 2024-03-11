@@ -119,8 +119,7 @@ def cycle_is_knotted(cycle, crossing_data_for_knots, crossing_data_for_links) ->
                 print("CYCLE EDGES AFTER SMOOTH", cycle_edges)
 
                 #switch sign of crossing in link data
-                crossing_data_for_links[crossing.over[0]][crossing.over[1]][crossing.under[0]][crossing.under[1]] = -crossing_data_for_links[crossing.over[0]][crossing.over[1]][crossing.under[0]][crossing.under[1]]
-
+                crossing_data_for_links = edit_crossing_data_for_links(crossing_data_for_links, crossing.over[0], crossing.over[1], crossing.under[0], crossing.under[1], -1)
 
     return True if a_2 != 0 else False
 
@@ -249,7 +248,6 @@ def check_crossing_order(inspected_crossing, crossing, crossing_data_for_links, 
 
     # -c crossing (SHARED UNDER):
     if (inspected_crossing.under == crossing.over) and inspected_crossing.order_over > crossing.order_over:
-        print("HERE")
         # if crossing goes through to other edge, both inspected crossing and through crossing disappear
         for through_crossing in crossing_data_for_knots:
                 if through_crossing.over == crossing.under and through_crossing.order_over > crossing.order_under:
@@ -365,4 +363,6 @@ print(f" There are {len(links)} links:")
 for link in links:
     print(link)
 
-print("KNOTS: ", knots)
+print(f" There are {len(knots)} knots:")
+for knot in knots:
+    print(knot)
