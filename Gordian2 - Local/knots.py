@@ -85,8 +85,10 @@ def cycle_is_knotted(cycle, crossing_data_for_knots, crossing_data_for_links) ->
                     print("SMOOTHING:", crossing)
                     
                     # remove crossing edges from cycle
-                    cycle_edges.remove(crossing.over)
-                    cycle_edges.remove(crossing.under)
+                    if crossing.over in cycle_edges:
+                         cycle_edges.remove(crossing.over)
+                    if crossing.under in cycle_edges:
+                         cycle_edges.remove(crossing.under)
 
                     # add in smoothed edges
                     cycle_edges.append([crossing.over[0], crossing.under[1]])
@@ -119,7 +121,8 @@ def cycle_is_knotted(cycle, crossing_data_for_knots, crossing_data_for_links) ->
                 print("CYCLE EDGES AFTER SMOOTH", cycle_edges)
 
                 #switch sign of crossing in link data
-                crossing_data_for_links = edit_crossing_data_for_links(crossing_data_for_links, crossing.over[0], crossing.over[1], crossing.under[0], crossing.under[1], -1)
+                crossing_data_for_links = edit_crossing_data_for_links(crossing_data_for_links, crossing.over[0], crossing.over[1], crossing.under[0], crossing.under[1], 
+                                        -crossing_data_for_links[crossing.over[0]][crossing.over[1]][crossing.under[0]][crossing.under[1]])
 
     return True if a_2 != 0 else False
 
