@@ -54,15 +54,13 @@ def cycle_is_knotted(cycle, crossing_data_for_knots, crossing_data_for_links) ->
     #initialize a_2 at start
     a_2 = 0
 
-    #get edges in cycle (with arbitrary orientation)
+    #get edges in cycle (with orientation being smallest node to largest node)
     cycle_edges = []
     for indx, node in enumerate(cycle[0:len(cycle)-1]):
         edge = [int(node), int(cycle[indx+1])]
         cycle_edges.append(edge)
 
     #traverse cycle by edges
-    # start = cycle_edges[0]
-    # start_indx = 0
     print("START CYCLE EDGES", cycle_edges)
     start_cycle = cycle_edges.copy()
     for edge in cycle_edges:
@@ -86,12 +84,9 @@ def cycle_is_knotted(cycle, crossing_data_for_knots, crossing_data_for_links) ->
                     # print("SMOOTHING")
                     print("SMOOTHING:", crossing)
                     
-
                     # remove crossing edges from cycle
-                    if crossing.over in cycle_edges:
-                        cycle_edges.remove(crossing.over)
-                    if crossing.under in cycle_edges:
-                        cycle_edges.remove(crossing.under)
+                    cycle_edges.remove(crossing.over)
+                    cycle_edges.remove(crossing.under)
 
                     # add in smoothed edges
                     cycle_edges.append([crossing.over[0], crossing.under[1]])
@@ -109,6 +104,7 @@ def cycle_is_knotted(cycle, crossing_data_for_knots, crossing_data_for_links) ->
 
                 # remove the crossing that has been smoothed
                 crossing_data_for_links = edit_crossing_data_for_links(crossing_data_for_links, crossing.over[0], crossing.over[1], crossing.under[0], crossing.under[1], 0)
+                
                 # calculate the linking number of the two disjoint cycles
                 a_2 -= linking_number(two_disjoint_cycles, crossing_data_for_links)
 
