@@ -1,0 +1,40 @@
+================ Graph_filepath ================  /trefoil.txt
+START CYCLE EDGES [[0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 7], [7, 0]]
+EDGE LOOKING AT: [0, 1]
+EDGE LOOKING AT: [1, 2]
+SMOOTHING: CROSSING => Over: [5, 6], Under: [1, 2] Seen: True, Over order: 1, Under order: 1 
+inspected_crossing: CROSSING => Over: [2, 3], Under: [0, 7] Seen: False, Over order: 1, Under order: 2 
+crossing: CROSSING => Over: [5, 6], Under: [1, 2] Seen: True, Over order: 1, Under order: 1 
+NO SHARED EDGES
+inspected_crossing: CROSSING => Over: [0, 7], Under: [4, 5] Seen: False, Over order: 1, Under order: 1 
+crossing: CROSSING => Over: [5, 6], Under: [1, 2] Seen: True, Over order: 1, Under order: 1 
+NO SHARED EDGES
+disjoint cycles:  [[0, 1], [2, 3], [3, 4], [4, 5], [6, 7], [7, 0], [5, 2], [1, 6]]
+seperated into:  [0, 1, 6, 7, 0] [2, 3, 4, 5, 2]
+cycleA egde [0, 1] cycleB egde [2, 3] lk =  0.0
+cycleA egde [0, 1] cycleB egde [3, 4] lk =  0.0
+cycleA egde [0, 1] cycleB egde [4, 5] lk =  0.0
+cycleA egde [0, 1] cycleB egde [5, 2] lk =  0.0
+cycleA egde [1, 6] cycleB egde [2, 3] lk =  0.0
+cycleA egde [1, 6] cycleB egde [3, 4] lk =  0.0
+cycleA egde [1, 6] cycleB egde [4, 5] lk =  0.0
+cycleA egde [1, 6] cycleB egde [5, 2] lk =  0.0
+cycleA egde [6, 7] cycleB egde [2, 3] lk =  0.0
+cycleA egde [6, 7] cycleB egde [3, 4] lk =  0.0
+cycleA egde [6, 7] cycleB egde [4, 5] lk =  0.0
+cycleA egde [6, 7] cycleB egde [5, 2] lk =  0.0
+cycleA egde [7, 0] cycleB egde [2, 3] lk =  -1.0
+cycleA egde [7, 0] cycleB egde [3, 4] lk =  0.0
+cycleA egde [7, 0] cycleB egde [4, 5] lk =  -1.0
+cycleA egde [7, 0] cycleB egde [5, 2] lk =  0.0
+LINKING NUMBER: -1.0
+CYCLE EDGES AFTER SMOOTH [[0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 7], [7, 0]]
+EDGE LOOKING AT: [2, 3]
+EDGE LOOKING AT: [3, 4]
+EDGE LOOKING AT: [4, 5]
+EDGE LOOKING AT: [5, 6]
+EDGE LOOKING AT: [6, 7]
+EDGE LOOKING AT: [7, 0]
+ There are 0 links:
+ There are 1 knots:
+['5', '6', '7', '0', '1', '2', '3', '4', '5']

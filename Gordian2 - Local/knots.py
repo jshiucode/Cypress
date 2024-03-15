@@ -359,13 +359,14 @@ def edit_crossing_data_for_links(crossings, a,b,c,d,value):
     return crossings
 
 ## TESTING PURPOSES ONLY:
-graph = input()
-filepath = "/" + graph + ".txt"
-links, knots = Gordian(filepath)
-print(f" There are {len(links)} links:")
-for link in links:
-    print(link)
+if __name__ == "__main__":
+    graph = input()
+    filepath = "/" + graph + ".txt"
+    links, knots = Gordian(filepath)
+    print(f" There are {len(links)} links:")
+    for link in links:
+        print(link)
 
-print(f" There are {len(knots)} knots:")
-for knot in knots:
-    print(knot)
+    print(f" There are {len(knots)} knots:")
+    for knot in knots:
+        print(knot)

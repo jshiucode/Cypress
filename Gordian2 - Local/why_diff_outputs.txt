@@ -1,0 +1,11 @@
+IMPORT actually runs the file -- can create inconsistency
+- SOLUTION: write if name == main which will run code only if file is run not on import
+- find code that runs on an undeterministic choice
+
+
+ORDER OF IMPORTS IS IMPORTANT TOO
+
+HOW TO PUT OUTPUT OF KNOTS.PY INTO TEXT FILE AND COMPARE DIFFERENCES
+- python3 knots.py > out.txt
+- run ( python3 knots.py > out1.txt ) again 
+- diff -w out.txt out1.txt
