@@ -1,0 +1,2 @@
+NOTE:
+- linking number for links still doesnt quite match Gordian 1
