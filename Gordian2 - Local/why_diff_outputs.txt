@@ -9,3 +9,20 @@ HOW TO PUT OUTPUT OF KNOTS.PY INTO TEXT FILE AND COMPARE DIFFERENCES
 - python3 knots.py > out.txt
 - run ( python3 knots.py > out1.txt ) again 
 - diff -w out.txt out1.txt
+
+Notes 3/26
+- when removing check_crossing_order(), knot output is consistent
+- just noticed that linking data is inconsistent:
+    - links are correct, but cycle order of vertices is inconsistent
+    - noted that find_all_cycles(dictify_cycles(fundamental_set_cycles)) is inconsistent
+    - ex:
+        {'5': ['4', '6'], '0': ['4', '6'], '6': ['0', '5'], '4': ['0', '5']}
+        {'5': ['6', '4'], '0': ['6', '4'], '6': ['0', '5'], '4': ['0', '5']}
+    - it is becasuse of this that linking data is inconsistent (and possibly knotting data)
+    - when orient_cycle_at_smallest is called, creates inconsistent orientation of cycles
+        - ex:
+            ['5', '4', '0', '6', '5']
+            ['5', '6', '0', '4', '5']
+            becomes
+            [0, 6, 5, 4, 0]
+            [0, 4, 5, 6, 0]     

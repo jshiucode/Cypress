@@ -48,6 +48,12 @@ def find_all_cycles(fundamental_cycles):
                 break
         
         if append:
+            # for some reason, other vertices in value of dictionary are inconsistent
+            # example: one = {'5': ['4', '6'], '0': ['4', '6'], '6': ['0', '5'], '4': ['0', '5']}
+            #          two = {'5': ['6', '4'], '0': ['6', '4'], '6': ['0', '5'], '4': ['0', '5']} 
+            # following for loop fixes that:   
+            for vertex in new_cycle.keys():
+                new_cycle[vertex].sort()
             all_cycles.append(new_cycle)
 
     return all_cycles
