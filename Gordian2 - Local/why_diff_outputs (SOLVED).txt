@@ -10,7 +10,7 @@ HOW TO PUT OUTPUT OF KNOTS.PY INTO TEXT FILE AND COMPARE DIFFERENCES
 - run ( python3 knots.py > out1.txt ) again 
 - diff -w out.txt out1.txt
 
-Notes 3/26
+Notes 3/26 - SOLVED
 - when removing check_crossing_order(), knot output is consistent
 - just noticed that linking data is inconsistent:
     - links are correct, but cycle order of vertices is inconsistent
@@ -26,3 +26,8 @@ Notes 3/26
             becomes
             [0, 6, 5, 4, 0]
             [0, 4, 5, 6, 0]     
+- FIXED INCONSISTENCY
+
+NOTE:
+- linking number for links still doesnt quite match Gordian 1
+
