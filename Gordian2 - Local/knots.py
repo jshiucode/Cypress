@@ -20,6 +20,7 @@ def Gordian(graph_filepath):
         crossing_data_for_knots = get_crossings_for_knots("./Graph data files/" + graph_filepath)
         fundamental_set_cycles = find_fund_set(graph, graph_edges)
         all_cycles = find_all_cycles(dictify_cycles(fundamental_set_cycles))
+        print(all_cycles)
         links = find_links(all_cycles, crossing_data_for_links)
         # FOR WHEN KNOT FUNCTION IS MADE:
         knots = find_knots(all_cycles, crossing_data_for_knots, crossing_data_for_links)
@@ -68,11 +69,31 @@ def smooth_crossing(crossing, cycle_edges, crossing_data_for_links, crossing_dat
     return cycle_edges, crossing_data_for_links
 
 """
+Orients crossing object with cycle's orientation. Edits crossing sign accordingly
+"""
+def orient_crossing(crossing, edges):
+    crossing_changes = 0
+    for edge in edges:
+        if edge == [crossing.over[1], crossing.over[0]]:
+            crossing.over = edge
+            crossing_changes += 1
+        if edge == [crossing.under[1], crossing.under[0]]:
+            crossing.under = edge
+            crossing_changes += 1
+    
+    if crossing_changes == 1:
+        crossing.sign = -crossing.sign
+    
+    return crossing
+
+"""
 Knotting algorithm for each cycle
 """
 def cycle_is_knotted(cycle, crossing_data_for_knots, crossing_data_for_links) -> bool:
     #orient the cycle correctly, start at 0 so all edges are [a,b] such that a < b
+    print("cycle before func", cycle)
     cycle = orient_cycle_at_smallest(cycle)
+    print("cycle oriented", cycle)
 
     #initialize copy of crossing_data
     crossing_data_for_knots = crossing_data_for_knots.copy()
@@ -90,9 +111,15 @@ def cycle_is_knotted(cycle, crossing_data_for_knots, crossing_data_for_links) ->
     # print("START CYCLE EDGES", cycle_edges)
     start_cycle = cycle_edges.copy()
     for edge in cycle_edges:
+        print("edge", edge)
         # print("EDGE LOOKING AT:", edge)
 
         for crossing in crossing_data_for_knots:
+            
+            #orient crossing to cycle's orientation
+            print("crossing before orient", crossing)
+            crossing = orient_crossing(crossing, cycle_edges)
+            print("crossing after orient", crossing)
 
             #if we see an undercrossing we havent seen yet, and the over crossing is in the cycle
             if (crossing.under == [edge[0], edge[1]]) and (crossing.seen != True) and (crossing.over in cycle_edges):
@@ -109,6 +136,7 @@ def cycle_is_knotted(cycle, crossing_data_for_knots, crossing_data_for_links) ->
                 
                 # calculate the linking number of the two disjoint cycles
                 a_2 -= linking_number(two_disjoint_cycles, crossing_data_for_links)
+                print(a_2)
 
                 #remove smoothed edges
                 cycle_edges.remove([crossing.over[0], crossing.under[1]])
@@ -329,6 +357,8 @@ def linking_number(two_disjoint_cycles, crossing_data_for_links):
     # seperate cycles
     # print("disjoint cycles: ", two_disjoint_cycles)
     cycleA, cycleB = seperate_cycles(two_disjoint_cycles)
+    print("cycleA:", cycleA)
+    print("cycleB", cycleB)
     # print("seperated into: ", cycleA, cycleB)
 
     # compare edges

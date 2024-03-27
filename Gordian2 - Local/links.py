@@ -5,8 +5,10 @@ Finds all the pairs of cycles that are linked
 """
 def find_links(all_cycles, crossings):
     cycles = []
+    #turn cycles back into lists from dictionary format
     for cycle in all_cycles:
         cycles.append(listify_cycles(list(cycle.keys())[0], cycle, []))
+
     linked_cycles = []
     #Compare all cycles with all other cycles (dont need to repeat pairs)
     for cycleA in cycles:
