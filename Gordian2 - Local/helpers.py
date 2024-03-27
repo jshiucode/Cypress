@@ -120,3 +120,7 @@ def orient_cycle_at_smallest(cycle):
     end_cycle.extend(hold_cycle[1:])
     end_cycle.append(smallest)
     return end_cycle
+
+# print(orient_cycle_at_smallest(['5', '6', '7', '1', '2', '3', '4', '5']))
+# t1 = ['5', '9', '8', '1', '5']
+# print(orient_cycle_at_smallest(t1))

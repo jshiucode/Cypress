@@ -42,6 +42,32 @@ def find_knots(all_cycles, crossing_data_knots, crossing_data_for_links) -> list
     return knotted_cycles
 
 """
+Smooths the crossing
+- returns two disjoint cycles
+- built into cycle_is_knotted() to access crossing_data_for_knots and crossing_data_for_links as local variables
+"""
+def smooth_crossing(crossing, cycle_edges, crossing_data_for_links, crossing_data_for_knots):
+    # print("SMOOTHING")
+    # print("SMOOTHING:", crossing)
+    
+    # remove crossing edges from cycle
+    if crossing.over in cycle_edges:
+            cycle_edges.remove(crossing.over)
+    if crossing.under in cycle_edges:
+            cycle_edges.remove(crossing.under)
+
+    # add in smoothed edges
+    cycle_edges.append([crossing.over[0], crossing.under[1]])
+    cycle_edges.append([crossing.under[0], crossing.over[1]])
+
+    for inspected_crossing in crossing_data_for_knots:
+        if inspected_crossing.representation() == crossing.representation():
+            continue
+        crossing_data_for_links = check_crossing_order(inspected_crossing, crossing, crossing_data_for_links, crossing_data_for_knots)
+
+    return cycle_edges, crossing_data_for_links
+
+"""
 Knotting algorithm for each cycle
 """
 def cycle_is_knotted(cycle, crossing_data_for_knots, crossing_data_for_links) -> bool:
@@ -61,10 +87,10 @@ def cycle_is_knotted(cycle, crossing_data_for_knots, crossing_data_for_links) ->
         cycle_edges.append(edge)
 
     #traverse cycle by edges
-    print("START CYCLE EDGES", cycle_edges)
+    # print("START CYCLE EDGES", cycle_edges)
     start_cycle = cycle_edges.copy()
     for edge in cycle_edges:
-        print("EDGE LOOKING AT:", edge)
+        # print("EDGE LOOKING AT:", edge)
 
         for crossing in crossing_data_for_knots:
 
@@ -74,32 +100,6 @@ def cycle_is_knotted(cycle, crossing_data_for_knots, crossing_data_for_links) ->
                 # if reach a crossing haven't seen yet: switch to over crossing, add to seen data
                 crossing.seen = True
                 # print(crossing)
-
-                """
-                Smooths the crossing
-                - returns two disjoint cycles
-                - built into cycle_is_knotted() to access crossing_data_for_knots and crossing_data_for_links as local variables
-                """
-                def smooth_crossing(crossing, cycle_edges, crossing_data_for_links, crossing_data_for_knots):
-                    # print("SMOOTHING")
-                    print("SMOOTHING:", crossing)
-                    
-                    # remove crossing edges from cycle
-                    if crossing.over in cycle_edges:
-                         cycle_edges.remove(crossing.over)
-                    if crossing.under in cycle_edges:
-                         cycle_edges.remove(crossing.under)
-
-                    # add in smoothed edges
-                    cycle_edges.append([crossing.over[0], crossing.under[1]])
-                    cycle_edges.append([crossing.under[0], crossing.over[1]])
-
-                    for inspected_crossing in crossing_data_for_knots:
-                        if inspected_crossing.representation() == crossing.representation():
-                            continue
-                        crossing_data_for_links = check_crossing_order(inspected_crossing, crossing, crossing_data_for_links, crossing_data_for_knots)
-
-                    return cycle_edges, crossing_data_for_links
 
                 # smooth the crossing, creating two disjoint cycles
                 two_disjoint_cycles, crossing_data_for_links = smooth_crossing(crossing, cycle_edges, crossing_data_for_links, crossing_data_for_knots)
@@ -115,10 +115,10 @@ def cycle_is_knotted(cycle, crossing_data_for_knots, crossing_data_for_links) ->
                 cycle_edges.remove([crossing.under[0], crossing.over[1]])
 
                 #crossing edges need to be added back into cycle with switched under/over
-                crossing.switch_over_under()
                 cycle_edges.insert(start_cycle.index(crossing.over), crossing.over)
                 cycle_edges.insert(start_cycle.index(crossing.under), crossing.under)
-                print("CYCLE EDGES AFTER SMOOTH", cycle_edges)
+                crossing.switch_over_under()
+                # print("CYCLE EDGES AFTER SMOOTH", cycle_edges)
 
                 #switch sign of crossing in link data
                 crossing_data_for_links = edit_crossing_data_for_links(crossing_data_for_links, crossing.over[0], crossing.over[1], crossing.under[0], crossing.under[1], 
@@ -133,15 +133,15 @@ Update the crossing_data_for_links matrix depending on crossing order after smoo
 """
 def check_crossing_order(inspected_crossing, crossing, crossing_data_for_links, crossing_data_for_knots):
     # !! for the following comments, go by diagram dranw on iPad 'Meeting 1.18 on fixing smoothing'
-    print("inspected_crossing:", inspected_crossing)
-    print("crossing:", crossing)
+    # print("inspected_crossing:", inspected_crossing)
+    # print("crossing:", crossing)
 
     # if inspected_crossing and crossing do not share any edges, continue
     if (inspected_crossing.over != crossing.over and
         inspected_crossing.under != crossing.under and
         inspected_crossing.over != crossing.under and
         inspected_crossing.under != crossing.over):
-        print("NO SHARED EDGES")
+        # print("NO SHARED EDGES")
         return crossing_data_for_links
     
     # inspected_crossing and crossing share edges
@@ -327,19 +327,19 @@ def linking_number(two_disjoint_cycles, crossing_data_for_links):
     cycleB = []
 
     # seperate cycles
-    print("disjoint cycles: ", two_disjoint_cycles)
+    # print("disjoint cycles: ", two_disjoint_cycles)
     cycleA, cycleB = seperate_cycles(two_disjoint_cycles)
-    print("seperated into: ", cycleA, cycleB)
+    # print("seperated into: ", cycleA, cycleB)
 
     # compare edges
     for a in range(len(cycleA)-1):
         for b in range(len(cycleB)-1):
             #print statement is inspecting lk# between each edge
-            print("cycleA egde", [cycleA[a],cycleA[a+1]], "cycleB egde", [cycleB[b], cycleB[b+1]], "lk = ", crossing_data_for_links[int(cycleA[a])][int(cycleA[a+1])][int(cycleB[b])][int(cycleB[b+1])])
+            # print("cycleA egde", [cycleA[a],cycleA[a+1]], "cycleB egde", [cycleB[b], cycleB[b+1]], "lk = ", crossing_data_for_links[int(cycleA[a])][int(cycleA[a+1])][int(cycleB[b])][int(cycleB[b+1])])
             link_num += crossing_data_for_links[int(cycleA[a])][int(cycleA[a+1])][int(cycleB[b])][int(cycleB[b+1])]
     link_num = link_num/2
 
-    print("LINKING NUMBER:", link_num)
+    # print("LINKING NUMBER:", link_num)
 
     return link_num
 
