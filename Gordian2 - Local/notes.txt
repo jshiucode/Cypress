@@ -1,2 +1,7 @@
 NOTE:
 - linking number for links still doesnt quite match Gordian 1
+
+Note 3/27
+- run alg_walk_thru and note that a_2 is 1.5 for a cycle
+- this is because crossing_data_for_links is being 0 somewhere it's not supposed to be
+    - two disjoint cycles result in linking number of 0 or 1 or -1 when divided by 2, never an odd number
