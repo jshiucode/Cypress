@@ -96,7 +96,7 @@ class handler(BaseHTTPRequestHandler):
 
 
 
-"""
+""" 
 Server execution
 """
 host = 'localhost'
