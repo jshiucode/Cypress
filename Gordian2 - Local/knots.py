@@ -110,22 +110,32 @@ def cycle_is_knotted(cycle, crossing_data_for_knots, crossing_data_for_links) ->
     #traverse cycle by edges
     # print("START CYCLE EDGES", cycle_edges)
     start_cycle = cycle_edges.copy()
+    print("start cylce", start_cycle)
 
     #orient all crossings to cycle's orientation
     for crossing in crossing_data_for_knots:
-        print("crossing before orient", crossing)
+        # print("crossing before orient", crossing)
         crossing = orient_crossing(crossing, cycle_edges)
         print("crossing after orient", crossing)
 
-    for edge in cycle_edges:
+    #iterate through edge list with while loop
+    i = 0
+    while i < len(cycle_edges):
+        #establish edge
+        edge = cycle_edges[i]
 
         print("edge", edge)
         # print("EDGE LOOKING AT:", edge)
 
         for crossing in crossing_data_for_knots:
 
+            #if its an over crossing, skip over but mark it as seen
+            if (crossing.over == [edge[0], edge[1]]) and (crossing.under in cycle_edges):
+                crossing.seen = True
+
             #if we see an undercrossing we havent seen yet, and the over crossing is in the cycle
             if (crossing.under == [edge[0], edge[1]]) and (crossing.seen != True) and (crossing.over in cycle_edges):
+                print("crossing", crossing)
 
                 # if reach a crossing haven't seen yet: switch to over crossing, add to seen data
                 crossing.seen = True
@@ -145,15 +155,26 @@ def cycle_is_knotted(cycle, crossing_data_for_knots, crossing_data_for_links) ->
                 cycle_edges.remove([crossing.over[0], crossing.under[1]])
                 cycle_edges.remove([crossing.under[0], crossing.over[1]])
 
-                #crossing edges need to be added back into cycle with switched under/over
-                cycle_edges.insert(start_cycle.index(crossing.over), crossing.over)
-                cycle_edges.insert(start_cycle.index(crossing.under), crossing.under)
+                #crossing edges need to be added back into cycle_edges with switched under/over, this also updates crossing's sign
+                print("crossing edges coming back", crossing.over, crossing.under)
+                if start_cycle.index(crossing.over) < start_cycle.index(crossing.under):
+                    cycle_edges.insert(start_cycle.index(crossing.over), crossing.over)
+                    cycle_edges.insert(start_cycle.index(crossing.under), crossing.under)
+                elif start_cycle.index(crossing.under) < start_cycle.index(crossing.over):
+                    cycle_edges.insert(start_cycle.index(crossing.under), crossing.under)
+                    cycle_edges.insert(start_cycle.index(crossing.over), crossing.over)
+                print("cycle_edges", cycle_edges)
+
                 crossing.switch_over_under()
+                print("crossing after smooth:", crossing)
                 # print("CYCLE EDGES AFTER SMOOTH", cycle_edges)
 
-                #switch sign of crossing in link data
-                crossing_data_for_links = edit_crossing_data_for_links(crossing_data_for_links, crossing.over[0], crossing.over[1], crossing.under[0], crossing.under[1], 
-                                        -crossing_data_for_links[crossing.over[0]][crossing.over[1]][crossing.under[0]][crossing.under[1]])
+                #update crossing data for links
+                crossing_data_for_links = edit_crossing_data_for_links(crossing_data_for_links, crossing.over[0], crossing.over[1], crossing.under[0], crossing.under[1], crossing.sign)
+                print("crossing data for links edited with pull over under", crossing_data_for_links[crossing.over[0]][crossing.over[1]][crossing.under[0]][crossing.under[1]])
+
+        #iterate to next edge
+        i+=1
 
     return True if a_2 != 0 else False
 
@@ -369,11 +390,10 @@ def linking_number(two_disjoint_cycles, crossing_data_for_links):
         for b in range(len(cycleB)-1):
             #print statement is inspecting lk# between each edge
             # print("cycleA egde", [cycleA[a],cycleA[a+1]], "cycleB egde", [cycleB[b], cycleB[b+1]], "lk = ", crossing_data_for_links[int(cycleA[a])][int(cycleA[a+1])][int(cycleB[b])][int(cycleB[b+1])])
-            print(crossing_data_for_links[int(cycleA[a])][int(cycleA[a+1])][int(cycleB[b])][int(cycleB[b+1])])
-            if crossing_data_for_links[int(cycleA[a])][int(cycleA[a+1])][int(cycleB[b])][int(cycleB[b+1])] > 0:
-                print(crossing_data_for_links[int(cycleA[a])][int(cycleA[a+1])][int(cycleB[b])][int(cycleB[b+1])])
-                print("edge1", [cycleA[a],cycleA[a+1]], "edge2", [cycleB[b], cycleB[b+1]])
+            print("edge1", [cycleA[a],cycleA[a+1]], "edge2", [cycleB[b], cycleB[b+1]], crossing_data_for_links[int(cycleA[a])][int(cycleA[a+1])][int(cycleB[b])][int(cycleB[b+1])])
+            
             link_num += crossing_data_for_links[int(cycleA[a])][int(cycleA[a+1])][int(cycleB[b])][int(cycleB[b+1])]
+
     link_num = link_num/2
 
     # print("LINKING NUMBER:", link_num)

@@ -79,7 +79,7 @@ class Crossing:
         self.sign = sign
 
     def __str__(self):
-        return f"CROSSING => Over: {self.over}, Under: {self.under} Seen: {self.seen}, Over order: {self.order_over}, Under order: {self.order_under} "
+        return f"CROSSING => Over: {self.over}, Under: {self.under} Seen: {self.seen}, Over order: {self.order_over}, Under order: {self.order_under}, Sign: {self.sign}"
 
     #for comparing crossings to eachother
     def representation(self):
@@ -90,6 +90,7 @@ class Crossing:
         placeholder = self.over
         self.over = self.under
         self.under = placeholder
+        self.sign = -self.sign
         return self
 
 

@@ -5,3 +5,7 @@ Note 3/27
 - run alg_walk_thru and note that a_2 is 1.5 for a cycle
 - this is because crossing_data_for_links is being 0 somewhere it's not supposed to be
     - two disjoint cycles result in linking number of 0 or 1 or -1 when divided by 2, never an odd number
+
+Note 4/2:
+- alg_walk_thru still invalid from 3/27
+- realized: when crossings are reoriented, does their order also need to be reoriented? I THINK YES
