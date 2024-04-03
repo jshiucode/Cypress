@@ -36,12 +36,12 @@ def find_knots(all_cycles, crossing_data_knots, crossing_data_for_links) -> list
     for dict_cycle in all_cycles:
         cycles.append(listify_cycles(list(dict_cycle.keys())[0], dict_cycle, []))
 
-
-    original_knot_data = copy.deepcopy(crossing_data_knots)
-    original_links_data = copy.deepcopy(crossing_data_for_links)
-
     knotted_cycles = []
     for cycle in cycles:
+        
+        original_knot_data = copy.deepcopy(crossing_data_knots)
+        original_links_data = copy.deepcopy(crossing_data_for_links)
+
         print("\n\n\n NEW CYCLE:", cycle)
         if cycle_is_knotted(cycle, original_knot_data, original_links_data):
             knotted_cycles.append(cycle)
