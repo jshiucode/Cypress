@@ -17,6 +17,6 @@ Note 4/2:
     - (SOLVED) crossing_data_for_knots not being reset between cycles (PROBLEM), going to assume crossing_data_for_links not being reset either
     - returning too many knots now:
         - something to do with seen/not seen
-            - if we pass over an over crossing, do we mark it as seen?
+            - if we pass over an over crossing, do we mark it as seen (I THINK SO -- see "Knotting algorithm" notability)
         - could also be the order of crossings (more likely)
             - go thru order_matters and check everything
