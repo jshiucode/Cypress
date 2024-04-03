@@ -38,7 +38,7 @@ def find_knots(all_cycles, crossing_data_knots, crossing_data_for_links) -> list
 
     knotted_cycles = []
     for cycle in cycles:
-        
+
         original_knot_data = copy.deepcopy(crossing_data_knots)
         original_links_data = copy.deepcopy(crossing_data_for_links)
 
@@ -141,7 +141,7 @@ def cycle_is_knotted(cycle, crossing_data_for_knots, crossing_data_for_links) ->
 
             #if its an over crossing, skip over but mark it as seen
             if (crossing.over == [edge[0], edge[1]]) and (crossing.under in cycle_edges):
-                print("crossing.over", crossing.over, [edge[0], edge[1]], "of", "crossing under", crossing.under)
+                print("crossing.over", crossing.over, [edge[0], edge[1]], "with", "crossing under", crossing.under)
                 crossing.seen = True
                 continue
 
