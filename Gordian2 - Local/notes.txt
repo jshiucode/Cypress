@@ -7,5 +7,9 @@ Note 3/27
     - two disjoint cycles result in linking number of 0 or 1 or -1 when divided by 2, never an odd number
 
 Note 4/2:
-- alg_walk_thru still invalid from 3/27
+- alg_walk_thru still invalid from 3/27 - SOLVED
 - realized: when crossings are reoriented, does their order also need to be reoriented? I THINK YES
+- order_matters broke -- but i think i got closer with knotting overall. order_matters was right for wrong reason.
+
+Note 4/2:
+- revisit new order_matters
