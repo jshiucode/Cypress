@@ -12,4 +12,7 @@ Note 4/2:
 - order_matters broke -- but i think i got closer with knotting overall. order_matters was right for wrong reason.
 
 Note 4/2:
-- revisit new order_matters
+- revisit new order_matters (try to run on original Gordian to see answer)
+- Problems:
+    - crossing_data_for_knots not being reset between cycles (PROBLEM)
+    - going to assume crossing_data_for_links not being reset either

@@ -7,6 +7,7 @@ from fundamental_set_cycles import find_fund_set
 from all_cycles import find_all_cycles
 from helpers import dictify_cycles, listify_cycles, seperate_cycles, orient_cycle_at_smallest
 from links import find_links
+import copy
 
 """
 FOR TESTING KNOTS.PY ONLY:
@@ -34,11 +35,20 @@ def find_knots(all_cycles, crossing_data_knots, crossing_data_for_links) -> list
     cycles = []
     for dict_cycle in all_cycles:
         cycles.append(listify_cycles(list(dict_cycle.keys())[0], dict_cycle, []))
-    
+
+
+    original_knot_data = copy.deepcopy(crossing_data_knots)
+    original_links_data = copy.deepcopy(crossing_data_for_links)
+
     knotted_cycles = []
     for cycle in cycles:
-        if cycle_is_knotted(cycle, crossing_data_knots, crossing_data_for_links):
+        print("\n\n\n NEW CYCLE:", cycle)
+        if cycle_is_knotted(cycle, original_knot_data, original_links_data):
             knotted_cycles.append(cycle)
+            print("===========THIS WAS A KNOTTED CYCLE===========")
+
+        for c in crossing_data_knots: print(c)
+
     
     return knotted_cycles
 
@@ -84,6 +94,9 @@ def orient_crossing(crossing, edges):
     if crossing_changes == 1:
         crossing.sign = -crossing.sign
     
+    #for every new cycle, all crossings are unseen
+    crossing.seen = False
+
     return crossing
 
 """
@@ -94,9 +107,6 @@ def cycle_is_knotted(cycle, crossing_data_for_knots, crossing_data_for_links) ->
     print("cycle before func", cycle)
     cycle = orient_cycle_at_smallest(cycle)
     print("cycle oriented", cycle)
-
-    #initialize copy of crossing_data
-    crossing_data_for_knots = crossing_data_for_knots.copy()
 
     #initialize a_2 at start
     a_2 = 0
@@ -110,9 +120,9 @@ def cycle_is_knotted(cycle, crossing_data_for_knots, crossing_data_for_links) ->
     #traverse cycle by edges
     # print("START CYCLE EDGES", cycle_edges)
     start_cycle = cycle_edges.copy()
-    print("start cylce", start_cycle)
+    print("start cycle", start_cycle)
 
-    #orient all crossings to cycle's orientation
+    #orient all crossings to cycle's orientation, mark all of the crossings as unseen
     for crossing in crossing_data_for_knots:
         # print("crossing before orient", crossing)
         crossing = orient_crossing(crossing, cycle_edges)
@@ -131,7 +141,9 @@ def cycle_is_knotted(cycle, crossing_data_for_knots, crossing_data_for_links) ->
 
             #if its an over crossing, skip over but mark it as seen
             if (crossing.over == [edge[0], edge[1]]) and (crossing.under in cycle_edges):
+                print("crossing.over", crossing.over, [edge[0], edge[1]], "of", "crossing under", crossing.under)
                 crossing.seen = True
+                continue
 
             #if we see an undercrossing we havent seen yet, and the over crossing is in the cycle
             if (crossing.under == [edge[0], edge[1]]) and (crossing.seen != True) and (crossing.over in cycle_edges):
