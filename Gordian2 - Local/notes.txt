@@ -14,5 +14,9 @@ Note 4/2:
 Note 4/2:
 - revisit new order_matters (try to run on original Gordian to see answer)
 - Problems:
-    - crossing_data_for_knots not being reset between cycles (PROBLEM)
-    - going to assume crossing_data_for_links not being reset either
+    - (SOLVED) crossing_data_for_knots not being reset between cycles (PROBLEM), going to assume crossing_data_for_links not being reset either
+    - returning too many knots now:
+        - something to do with seen/not seen
+            - if we pass over an over crossing, do we mark it as seen?
+        - could also be the order of crossings (more likely)
+            - go thru order_matters and check everything
