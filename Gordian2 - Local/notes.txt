@@ -29,3 +29,6 @@ Note 4/3:
     - WORKS (NOT KNOTTED)
 - order_matters_new is running correctly, 8 knots
     - checked each cycle given by the program, and each knot with a shoestring. everything checks out.
+- testing f9 (FOUND PROBLEM)
+    - for cycle [0, 8, 4, 3, 7, 2, 1, 5, 0], a2 = 0.5 (not supposed to happen)
+    - inspect this cycle on paper, see what's going wrong.
