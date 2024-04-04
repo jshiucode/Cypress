@@ -19,4 +19,13 @@ Note 4/2:
         - something to do with seen/not seen
             - if we pass over an over crossing, do we mark it as seen (I THINK SO -- see "Knotting algorithm" notability)
         - could also be the order of crossings (more likely)
+            - does changing the orientation of the knots also change order (I THINK SO -- NOT IMPLEMENTED YET)
             - go thru order_matters and check everything
+
+Note 4/3:
+- order_matters is now order_matters_new
+- order_matters_old is an old example where there exists no knot, one cycle
+    - inspecting this:
+    - WORKS (NOT KNOTTED)
+- order_matters_new is running correctly, 8 knots
+    - checked each cycle given by the program, and each knot with a shoestring. everything checks out.

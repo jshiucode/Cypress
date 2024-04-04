@@ -46,8 +46,7 @@ def find_knots(all_cycles, crossing_data_knots, crossing_data_for_links) -> list
         if cycle_is_knotted(cycle, original_knot_data, original_links_data):
             knotted_cycles.append(cycle)
             print("===========THIS WAS A KNOTTED CYCLE===========")
-
-        for c in crossing_data_knots: print(c)
+            for c in original_knot_data: print(c)
 
     
     return knotted_cycles
