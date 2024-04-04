@@ -72,7 +72,9 @@ get_crossings_for_knots: returns dictionary of crossings. each crossing is an ob
 class Crossing:
     def __init__(self, a, b, c, d, order_over, order_under, sign):
         self.over = [a, b]
+        self.over_was_switched = False
         self.under = [c, d]
+        self.under_was_switched = False
         self.seen = False
         self.order_over = order_over
         self.order_under = order_under

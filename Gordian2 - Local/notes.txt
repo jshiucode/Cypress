@@ -32,3 +32,15 @@ Note 4/3:
 - testing f9 (FOUND PROBLEM)
     - for cycle [0, 8, 4, 3, 7, 2, 1, 5, 0], a2 = 0.5 (not supposed to happen)
     - inspect this cycle on paper, see what's going wrong.
+
+Note 4/4:
+- inspecting knots outputted in f9
+    - PROBLEM: crossing order needs to be updated when crossing edges orientation are updated
+    - do this in orient_crossing(), may need to edit entire function (pass in crossing_data_for_knots)
+        - SOLVED: (I believe)... may need to do more unit testing.
+            - rewrote orient_crossings() function to change order of crossing data
+
+    - POTENTIAL PROBLEM: when inspecting an edge in cycle, does program take into account order of checking crossings?
+        - (see Checking f9.txt Inspecting: [0, 8, 4, 3, 7, 2, 1, 5, 0] section)
+
+- PROBLEM: still receiving a_2 = 0.5 on some cycles. Inspect those cycles and identify problems.

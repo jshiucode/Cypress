@@ -1,0 +1,8 @@
+CROSSING => Over: [1, 2], Under: [8, 7] Seen: False, Over order: 2, Under order: 3, Sign: 1
+CROSSING => Over: [1, 2], Under: [9, 10] Seen: False, Over order: 1, Under order: 1, Sign: -1
+CROSSING => Over: [8, 7], Under: [4, 3] Seen: False, Over order: 2, Under order: 1, Sign: 1
+CROSSING => Over: [4, 3], Under: [9, 10] Seen: False, Over order: 2, Under order: 2, Sign: 1
+CROSSING => Over: [8, 7], Under: [5, 6] Seen: False, Over order: 1, Under order: 2, Sign: -1
+CROSSING => Over: [9, 10], Under: [5, 6] Seen: False, Over order: 3, Under order: 1, Sign: 1
+
+(CORRECT I BELIEVE, ORDER MATCHES BLACKBOARD)

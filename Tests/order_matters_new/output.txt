@@ -474,4 +474,6 @@ CROSSING => Over: [0, 8], Under: [5, 4] Seen: True, Over order: 1, Under order: 
 ['7', '5', '4', '3', '2', '1', '0', '8', '7']
 (base) jordanshiu@Jordans-MBP-2 Gordian2 - Local % 
 
-(THIS IS CORRECT - CHECKED BY HAND WITH SHOESTRING)
+NOTES:
+- program is outputting correct knots
+- each knotted cycle has no edges with multiple crossings on it, each has only 1.

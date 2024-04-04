@@ -78,25 +78,49 @@ def smooth_crossing(crossing, cycle_edges, crossing_data_for_links, crossing_dat
     return cycle_edges, crossing_data_for_links
 
 """
-Orients crossing object with cycle's orientation. Edits crossing sign accordingly
+Orients each crossing's edges to orientation of the cycle
+Edits crossing sign accordingly
+Edits crossing order accordingly
+Marks each crossing as unseen
 """
-def orient_crossing(crossing, edges):
-    crossing_changes = 0
-    for edge in edges:
-        if edge == [crossing.over[1], crossing.over[0]]:
-            crossing.over = edge
-            crossing_changes += 1
-        if edge == [crossing.under[1], crossing.under[0]]:
-            crossing.under = edge
-            crossing_changes += 1
-    
-    if crossing_changes == 1:
-        crossing.sign = -crossing.sign
-    
-    #for every new cycle, all crossings are unseen
-    crossing.seen = False
+def orient_crossings(crossing_data_for_knots, edges):
+    #edit crossing edges and sign mark as unseen
+    switched_edges_and_max = {}
+    for crossing in crossing_data_for_knots:
+        crossing_edge_changes = 0
+        for edge in edges:
+            if edge == [crossing.over[1], crossing.over[0]]:
+                crossing.over = edge
+                crossing_edge_changes += 1
+                if str(edge) in switched_edges_and_max:
+                    switched_edges_and_max[str(edge)] = max(crossing.order_over, switched_edges_and_max[str(edge)])
+                else:
+                    switched_edges_and_max[str(edge)] = crossing.order_over
+                crossing.over_was_switched = True
 
-    return crossing
+            if edge == [crossing.under[1], crossing.under[0]]:
+                crossing.under = edge
+                crossing_edge_changes += 1
+                if str(edge) in switched_edges_and_max:
+                    switched_edges_and_max[str(edge)] = max(crossing.order_under, switched_edges_and_max[str(edge)])
+                else:
+                    switched_edges_and_max[str(edge)] = crossing.order_under
+                crossing.under_was_switched = True
+        
+        if crossing_edge_changes == 1:
+            crossing.sign = -crossing.sign
+    
+        #for every new cycle, all crossings are unseen
+        crossing.seen = False
+    
+    #edit crossing order
+    for crossing in crossing_data_for_knots:
+        if crossing.over_was_switched:
+            crossing.order_over = list(range(switched_edges_and_max[str(crossing.over)], 0, -1))[crossing.order_over-1]
+        if crossing.under_was_switched:
+            crossing.order_under = list(range(switched_edges_and_max[str(crossing.under)], 0, -1))[crossing.order_under-1]
+
+    return crossing_data_for_knots 
 
 """
 Knotting algorithm for each cycle
@@ -121,11 +145,8 @@ def cycle_is_knotted(cycle, crossing_data_for_knots, crossing_data_for_links) ->
     start_cycle = cycle_edges.copy()
     print("start cycle", start_cycle)
 
-    #orient all crossings to cycle's orientation, mark all of the crossings as unseen
-    for crossing in crossing_data_for_knots:
-        # print("crossing before orient", crossing)
-        crossing = orient_crossing(crossing, cycle_edges)
-        print("crossing after orient", crossing)
+    # orient all crossings edges, order, and sign to cycle's orientation, mark all of the crossings as unseen
+    crossing_data_for_knots = orient_crossings(crossing_data_for_knots, cycle_edges)
 
     #iterate through edge list with while loop
     i = 0
@@ -208,7 +229,6 @@ def check_crossing_order(inspected_crossing, crossing, crossing_data_for_links, 
         return crossing_data_for_links
     
     # inspected_crossing and crossing share edges
-    #TODO: PUT IN CORRECT ALGORITHM FOR EDITING CROSSINGS GIVEN ORDER OF CROSSINGS
 
     # -a crossing (SHARED OVER):
     if (inspected_crossing.over == crossing.under) and inspected_crossing.order_over < crossing.order_under:
