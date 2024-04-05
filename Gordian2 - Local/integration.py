@@ -6,4 +6,5 @@ app = Flask(__name__)
 
 @app.route("/")
 def run_algorithm():
-    return [1,2]
+    (links, time, knots) = Gordian(request.data.decode("utf-8"))
+    return {"links": links, "time": time, "knots": knots}
