@@ -8,10 +8,10 @@ import numpy as np
 create_graph: takes .txt file and outputs the graph
 - Parameters: .txt file path
 """
-def create_graph(filepath):
+def create_graph(graph_data):
     graph = {}
-    graph_data = open(str(filepath), 'r')
-    for word in graph_data.readlines():
+    graph_data = graph_data.split('\n')
+    for word in graph_data:
         word = word.replace(',', ' ').split()
         if(len(word) > 2): #is a crossing
             continue
@@ -31,10 +31,10 @@ def create_graph(filepath):
 get_edges: returns set of edges from a graph
 - Parameters: .txt file path containing graph edges (and crossings)
 """
-def get_edges(filepath):
+def get_edges(graph_data):
     edges = []
-    graph_data = open(str(filepath), 'r')
-    for word in graph_data.readlines():
+    graph_data = graph_data.split('\n')
+    for word in graph_data:
         word = word.replace(',', ' ').split()
         if len(word) > 2:
             continue
@@ -45,11 +45,11 @@ def get_edges(filepath):
 get_crossings_for_links: returns crossing data for use in link finding algorithm
 - Parameters: .txt file path containing graph crossings (and edges)
 """
-def get_crossings_for_links(filepath, graph):
+def get_crossings_for_links(graph_data, graph):
     x = max([int(num) for num in list(graph.keys())]) + 1
     crossings = np.zeros((x,x,x,x)) #4 dimensional array with dimensions equal to highest signertex
-    graph_data = open(str(filepath), 'r')
-    for line in graph_data.readlines():
+    graph_data = graph_data.split('\n')
+    for line in graph_data:
         line = line.replace(',', ' ').split()
         if len(line) == 7:
             a, b, c, d, sign = int(line[0]), int(line[1]), int(line[2]), int(line[3]), int(line[6])
@@ -96,10 +96,10 @@ class Crossing:
         return self
 
 
-def get_crossings_for_knots(filepath):
+def get_crossings_for_knots(graph_data):
     crossing_list = []
-    graph_data = open(str(filepath), 'r')
-    for line in graph_data.readlines():
+    graph_data = graph_data.split('\n')
+    for line in graph_data:
         line = line.replace(',', ' ').split()
         if len(line) == 7:
             a, b, c, d, order_a, order_b, sign = int(line[0]), int(line[1]), int(line[2]), int(line[3]), int(line[4]), int(line[5]), int(line[6])
