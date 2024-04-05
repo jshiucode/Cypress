@@ -44,3 +44,12 @@ Note 4/4:
         - (see Checking f9.txt Inspecting: [0, 8, 4, 3, 7, 2, 1, 5, 0] section)
 
 - PROBLEM: still receiving a_2 = 0.5 on some cycles. Inspect those cycles and identify problems.
+
+
+
+Note 4/4: Meeting with Dondi and Alex (INTEGRATION WITH FLASK)
+- Created virtual environment with Flask
+- To run virtual environment:
+    - to go into virtual environment with Flask: . .venv/bin/activate
+    - run ' flask --app integration run ' to deploy server on localhost:5000
+    - use postman and edit 'body' with graph data to get output
