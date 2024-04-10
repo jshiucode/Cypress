@@ -11,7 +11,7 @@ def run_algorithm():
     (links, time, knots) = Gordian(request.data.decode("utf-8"))
     return {"links": links, "elapsed_time": time, "knots": knots}
 
-@app.route("/")
+@app.route("/", methods=["GET"])
 def home():
     return "Flask Vercel Example - Hello World", 200
 
