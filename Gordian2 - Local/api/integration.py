@@ -10,3 +10,6 @@ CORS(app)
 def run_algorithm():
     (links, time, knots) = Gordian(request.data.decode("utf-8"))
     return {"links": links, "elapsed_time": time, "knots": knots}
+
+def home():
+    return "Flask Vercel Example - Hello World", 200
