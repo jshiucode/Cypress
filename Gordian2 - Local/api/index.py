@@ -13,7 +13,7 @@ def run_algorithm():
 
 @app.route("/", methods=["GET"])
 def home():
-    return "Flask Vercel Example - Hello World", 200
+    return "You shouldn't be here, go away!", 200
 
 
 @app.errorhandler(500)
