@@ -1,4 +1,4 @@
-from helpers import listify_cycles
+from .helpers import listify_cycles
 
 """
 Finds all the pairs of cycles that are linked

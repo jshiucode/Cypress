@@ -5,7 +5,7 @@ Algorithm from Keith Paton paper for finding fundamental set of cycles of a grap
 # import graph_creator 
 # graph = graph_creator.graph
 # edges = graph_creator.graph_edges
-from find_cycle import give_cycle
+from .find_cycle import give_cycle
 
 def find_fund_set(graph, edges):
     V = list(graph.keys()) #change name to vertices

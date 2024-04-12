@@ -1,7 +1,7 @@
 from flask import Flask
 from flask import request, jsonify
 from flask_cors import CORS
-from Gordian2 import Gordian
+from algorithm.Gordian2 import Gordian
 
 app = Flask(__name__)
 CORS(app)

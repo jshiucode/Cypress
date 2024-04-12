@@ -1,13 +1,13 @@
-from graph_creator import create_graph, get_crossings_for_links, get_edges, get_crossings_for_knots
-from fundamental_set_cycles import find_fund_set
-from all_cycles import find_all_cycles
-from helpers import dictify_cycles
-from links import find_links
-from knots import find_knots
+from .graph_creator import create_graph, get_crossings_for_links, get_edges, get_crossings_for_knots
+from .fundamental_set_cycles import find_fund_set
+from .all_cycles import find_all_cycles
+from .helpers import dictify_cycles
+from .links import find_links
+from .knots import find_knots
 
 
-from links import listify_cycles
-from links import find_links
+from .links import listify_cycles
+from .links import find_links
 import time
 
 """
