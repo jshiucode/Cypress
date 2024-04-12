@@ -1,4 +1,4 @@
-from helpers import bin_strings
+from .helpers import bin_strings
 
 """
 Finds cycles between all linear combinations of fundamental set of cycles

@@ -2,11 +2,11 @@
 Function that uses cycles and crossing data to find knots
 """
 
-from graph_creator import create_graph, get_crossings_for_links, get_edges, get_crossings_for_knots
-from fundamental_set_cycles import find_fund_set
-from all_cycles import find_all_cycles
-from helpers import dictify_cycles, listify_cycles, seperate_cycles, orient_cycle_at_smallest
-from links import find_links
+from .graph_creator import create_graph, get_crossings_for_links, get_edges, get_crossings_for_knots
+from .fundamental_set_cycles import find_fund_set
+from .all_cycles import find_all_cycles
+from .helpers import dictify_cycles, listify_cycles, seperate_cycles, orient_cycle_at_smallest
+from .links import find_links
 import copy
 
 """
