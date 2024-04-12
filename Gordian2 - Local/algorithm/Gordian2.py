@@ -33,3 +33,7 @@ def Gordian(graph_data):
         elapsed_time = end_time - start_time
 
         return links, elapsed_time, knots
+
+inp = input()
+i = "/Gordian2 - Local/Graph data files" + inp
+print(Gordian(i))
