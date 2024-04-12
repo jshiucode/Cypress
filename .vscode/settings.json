@@ -1,0 +1,5 @@
+{
+    "python.analysis.extraPaths": [
+        "./Gordian2 - Local/algorithm"
+    ]
+}
