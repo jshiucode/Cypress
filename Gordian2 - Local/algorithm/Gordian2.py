@@ -8,15 +8,11 @@ from knots import find_knots
 
 from links import listify_cycles
 from links import find_links
-from functools import cached_property
-from urllib.parse import parse_qsl, urlparse
-from http.server import BaseHTTPRequestHandler, HTTPServer
-import http.server
-from http.cookies import SimpleCookie
 import time
 
 """
 Full integration of all other files
+Used for API
 """
 def Gordian(graph_data):
     if graph_data != 'favicon.ico':
