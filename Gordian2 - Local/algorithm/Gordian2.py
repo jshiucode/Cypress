@@ -20,6 +20,7 @@ def Gordian(graph_data):
         print("================ graph_data ================ ", graph_data)
         graph  = create_graph(graph_data)
         graph_edges = get_edges(graph_data)
+        print(graph_edges)
         crossing_data_for_links = get_crossings_for_links(graph_data, graph)
         crossing_data_for_knots = get_crossings_for_knots(graph_data)
         fundamental_set_cycles = find_fund_set(graph, graph_edges)
@@ -33,7 +34,3 @@ def Gordian(graph_data):
         elapsed_time = end_time - start_time
 
         return links, elapsed_time, knots
-
-inp = input()
-i = "/Gordian2 - Local/Graph data files" + inp
-print(Gordian(i))

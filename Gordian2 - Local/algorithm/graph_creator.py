@@ -13,6 +13,7 @@ def create_graph(graph_data):
     graph_data = graph_data.split('\n')
     for word in graph_data:
         word = word.replace(',', ' ').split()
+        print(word)
         if(len(word) > 2): #is a crossing
             continue
         if word[0] not in graph.keys():
