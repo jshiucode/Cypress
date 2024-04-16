@@ -3,8 +3,6 @@
 ## Description
 Cypress is an algorithm which counts the links and knots within spatial graphs. The motivation for this project came from research done in Loyola Marymount University's mathematics department between Dr. Blake Mellor and Jordan Shiu, where we sought to find the minimal linking number of spatial graphs in the Heawood Family. It is usually near impossible to find all the links and knots within particular embeddings of these graphs by hand, so we engineered Cypress to do this task in seconds.
 
-It serves as the backend for a graph visualization web-app found at https://graph-vis.vercel.app/.
-
 ## Using Cypress Online:
 Cypress currently serves as the backend for a graph visualization web-app found at https://graph-vis.vercel.app/. This was a joint project completed by Alex Abrams and Jordan Shiu.
 
@@ -46,7 +44,8 @@ Crossings are 7-tuples a,b,c,d,m,n,k where:
 - m is the order of this crossing along edge (a,b) counting from a to b
 - n is the order of this crossing along edge (c,d) counting from c to d
 - k is the sign of the crossing, assuming the edges are oriented from a to b and c to d.
-    - The sign of the crossing is determined by the standard right-hand rule, as shown below.
+    - The sign of the crossing is determined by the standard right-hand rule, as shown below:
+
     <img src="/Cypress/docs/right_hand_rule.jpeg">
 
 4. Send a POST request with this data. The algorithm will run and output the number of links and knots in the graph.
