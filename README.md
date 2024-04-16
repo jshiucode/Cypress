@@ -8,15 +8,16 @@ Cypress currently serves as the backend for a graph visualization web-app found 
 
 ## Using Cypress Locally:
 After cloning, here's how one can use cypress on their local machine through Flask:
-1. Go into the virtual environment from CLI:
+1. Create a virtual environment in python and install all dependencies listed in requirements.txt
+2. Go into the virtual environment from CLI:
 ```
 . .venv/bin/activate
 ```
-2. Run flask_local.py as a Flask app (deploys at localhost:5000):
+3. Run flask_local.py as a Flask app (deploys at localhost:5000):
 ```
 flask --app flask_local run
 ```
-3. Use Postman or a similar application and add graph data to the body with the following example format:
+4. Use Postman or a similar application and add graph data to the body with the following example format:
 ```
 0,1
 0,2
@@ -48,4 +49,4 @@ Crossings are 7-tuples a,b,c,d,m,n,k where:
 
     <img src="/Cypress/docs/right_hand_rule.jpeg">
 
-4. Send a POST request with this data. The algorithm will run and output the number of links and knots in the graph.
+5. Send a POST request with this data. The algorithm will run and output the number of links and knots in the graph.
