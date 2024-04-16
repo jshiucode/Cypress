@@ -1,5 +1,5 @@
 """
-Host Gordian locally; runs at localhost:8080
+Host Cypress locally; runs at localhost:8080
 """
 from graph_creator import create_graph, get_crossings_for_links, get_edges, get_crossings_for_knots
 from fundamental_set_cycles import find_fund_set
@@ -20,7 +20,7 @@ import time
 """
 Full integration of all other files
 """
-def Gordian(graph_filepath):
+def Cypress(graph_filepath):
     if graph_filepath != 'favicon.ico':
         start_time = time.time()
         print("================ Graph_filepath ================ ", graph_filepath)
@@ -71,12 +71,12 @@ class handler(BaseHTTPRequestHandler):
         self.send_header('Content-type','text/html')
         self.end_headers()
 
-        self.wfile.write(bytes("<html><head><title>Gordian 2.</title></head>", "utf-8"))
+        self.wfile.write(bytes("<html><head><title>Cypress Algorithm.</title></head>", "utf-8"))
         self.wfile.write(bytes("<body><p>Input graph data file as path in URL. (ex: localhost:9090/k7.txt) </p>", "utf-8"))
         self.wfile.write(bytes("<p>You accessed file: %s</p>" % self.path[1:], "utf-8"))
 
         graph_filepath = self.path[1:]
-        links, elapsed_time, knots = Gordian(graph_filepath)
+        links, elapsed_time, knots = Cypress(graph_filepath)
 
         self.wfile.write(bytes('LINKS:', "utf-8"))
         for link in links:
@@ -101,7 +101,7 @@ host = 'localhost'
 port = 8080
 try:
     server = http.server.HTTPServer((host, port), handler)
-    print('Started server. Running Gordian 2')
+    print('Started server. Running Cypress Algorithm')
     server.serve_forever()
 except KeyboardInterrupt:
     print('^C received, shutting down server')

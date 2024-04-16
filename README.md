@@ -1,4 +1,4 @@
-# Gordian 2
+# Cypress
 
 Counting the links and knots within spatial graphs of the Headwood family.
 

@@ -14,13 +14,12 @@ import time
 Full integration of all other files
 Used for API
 """
-def Gordian(graph_data):
+def Cypress(graph_data):
     if graph_data != 'favicon.ico':
         start_time = time.time()
         print("================ graph_data ================ ", graph_data)
         graph  = create_graph(graph_data)
         graph_edges = get_edges(graph_data)
-        print(graph_edges)
         crossing_data_for_links = get_crossings_for_links(graph_data, graph)
         crossing_data_for_knots = get_crossings_for_knots(graph_data)
         fundamental_set_cycles = find_fund_set(graph, graph_edges)

@@ -12,7 +12,7 @@ import copy
 """
 FOR TESTING KNOTS.PY ONLY:
 """
-def Gordian(graph_filepath):
+def Cypress(graph_filepath):
     if graph_filepath != 'favicon.ico':
         print("================ Graph_filepath ================ ", graph_filepath)
         graph  = create_graph("./Graph data files/" + graph_filepath)
@@ -450,7 +450,7 @@ def edit_crossing_data_for_links(crossings, a,b,c,d,value):
 if __name__ == "__main__":
     graph = input()
     filepath = "/" + graph + ".txt"
-    links, knots = Gordian(filepath)
+    links, knots = Cypress(filepath)
     print(f" There are {len(links)} links:")
     for link in links:
         print(link)

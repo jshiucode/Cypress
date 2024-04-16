@@ -54,3 +54,5 @@ Note 4/4: Meeting with Dondi and Alex (INTEGRATION WITH FLASK)
     - run ' flask --app integration run ' to deploy server on localhost:5000
     - use postman and edit 'body' with graph data to get output in Postman
 - output is a .json file as {"links": links, "elapsed_time": time, "knots": knots}
+
+Note 4/16: Renamed algorithm to Cypress
