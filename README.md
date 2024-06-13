@@ -4,7 +4,7 @@
 Cypress is an algorithm which counts the links and knots within spatial graphs. The motivation for this project came from research done in Loyola Marymount University's mathematics department between Dr. Blake Mellor and Jordan Shiu, where we sought to find the minimal linking number of spatial graphs in the Heawood Family. It is usually near impossible to find all the links and knots within particular embeddings of these graphs by hand, so we engineered Cypress to do this task in seconds.
 
 ## Using Cypress Online:
-Cypress currently serves as the backend for a graph visualization web-app found at https://graph-vis.vercel.app/. This was a joint project completed by Alex Abrams and Jordan Shiu.
+Cypress currently lives in the backend of the graph visualization web-app found at https://graph-vis.vercel.app/. Click 'Run Algorithm' to run Cypress. Alex Abrams designed the front end of this graph visualization app.
 
 ## Using Cypress Locally:
 After cloning, here's how one can use cypress on their local machine through Flask:
