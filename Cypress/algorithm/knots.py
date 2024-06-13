@@ -9,6 +9,7 @@ from .helpers import dictify_cycles, listify_cycles, seperate_cycles, orient_cyc
 from .links import find_links
 import copy
 
+
 """
 FOR TESTING KNOTS.PY ONLY:
 """
